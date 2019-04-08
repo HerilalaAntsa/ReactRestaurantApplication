@@ -12,6 +12,10 @@ import PasswordForgetPage from '../PasswordForget';
 import HomePage from '../Home';
 import AccountPage from '../Account';
 import AdminPage from '../Admin';
+import RestaurantList from '../RestaurantList';
+import Restaurant from '../Restaurant';
+import MenuList from '../MenuList';
+import Menu from '../Menu';
 
 import * as ROUTES from '../../constants/routes';
 
@@ -30,6 +34,10 @@ const App = () => (
       <Route path={ROUTES.HOME} component={HomePage} />
       <Route path={ROUTES.ACCOUNT} component={AccountPage} />
       <Route path={ROUTES.ADMIN} component={AdminPage} />
+      <Route path={ROUTES.ACCUEIL} component={RestaurantList} />
+      <Route path={ROUTES.RESTAURANT + '/:id'} component={Restaurant} />
+      <Route path={ROUTES.MENURESTAURANT + '/:id'} component={MenuList} />
+      <Route path={ROUTES.MENURESTAURANTDETAIL + '/:restaurant/:id'} component={Menu} />
     </div>
   </Router>
 );
