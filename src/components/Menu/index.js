@@ -1,34 +1,71 @@
 import React, { Component } from 'react';
-import MenuItem from './MenuItem';
+import MenuListItem from './MenuListItem';
 import base from '../../constants/base';
-import { Link } from 'react-router-dom';
-import * as ROUTES from '../../constants/routes';
+import ModalDetail from './ModalDetail';
+import ModalCommande from './ModalCommande';
+import { Slide } from '@material-ui/core';
 
-class Menu extends Component {
+class MenuList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      restaurant: props.match.params.restaurant,
       id: props.match.params.id,
-      menu: {}
+      menu: {}, commande: {},
+      openDetail: false,
+      openCommande: false ,
+      detail: {}
     }
   }
+  handleClickOpenDetail(menu) {
+    this.setState({ openDetail: true, detail: menu });
+  }
+  handleClickOpenCommande(menu) {
+    this.setState({ openCommande: true, detail: menu });
+  }
+  handleCloseCommande() {
+    this.setState({ openCommande: false });
+  }
+  handleCloseDetail() {
+    this.setState({ openDetail: false });
+  }
+  addCommande(item, horsdoeuvre, plat, dessert) {
+    const copieCommande = { ...this.state.commande }; // spread operator permert de cloner des object
+    if (copieCommande[this.state.id]) {
+      if (copieCommande[this.state.id]['menu'][item._id]) {
+        copieCommande[this.state.id]['menu'][item._id]['qte'] += 1;
+      }
+    } else {
+      copieCommande[this.state.id] = {
+        'menu': {},
+        'carte': {}
+      }
+      copieCommande[this.state.id]['menu'][item._id] = {
+        'qte': 1,
+        'prix': item.prix,
+        'horsdoeuvre': horsdoeuvre,
+        'plat': plat,
+        'dessert': dessert,
+        'item': item
+      }
 
-  changeInputMessage(event) {
-
+    }
     this.setState({
-      input: event.target.value
+      commande: copieCommande
     });
+    console.log("commande added" + this.state.commande);
   }
 
   componentWillMount() {
-    console.log("Will mount")
-    let url = 'menu/' + this.state.restaurant + '/' + this.state.id;
+    console.log("Will mount");
     // this runs right before the <App> is rendered
-    this.ref = base.syncState(url, {
+    this.ref = base.syncState("menu/" + this.state.id, {
       context: this,
       state: 'menu'
     });
+    this.refCommande = base.syncState("commande", {
+      context: this,
+      state: 'commande'
+    })
   }
 
   componentWillUnmount() {
@@ -37,34 +74,37 @@ class Menu extends Component {
   }
 
   render() {
-    let detail = Object.keys(this.state.menu).map((property) => {
-      let value = this.state.menu[property];
-      if (typeof(value) == 'object') {
-        return Object.keys(value).map((detail) => {
-          let item = value[detail];
-          return <MenuItem
-            key={detail}
-            nom={item.nom}
-            description={item.description}>
-          </MenuItem>
-        })
-      }
-
-    });
-    console.log(detail);
+    let menu = Object.keys(this.state.menu).map((key) => {
+      let item = this.state.menu[key];
+      return <MenuListItem
+        key={key}
+        id={this.state.id}
+        item={item}
+        handleClickOpenDetail={this.handleClickOpenDetail.bind(this)}
+        handleClickOpenCommande={this.handleClickOpenCommande.bind(this)}
+        addCommande={this.addCommande.bind(this)} />
+    })
     return (
-      <div className="Menu">
-        <div>
-          <h2>Menu {this.state.menu.nom}</h2>
-          <p>Prix {this.state.menu.prix}</p>
-          <ul>
-            {detail}
-          </ul>
-          <Link to={ROUTES.COMMANDERMENU + '/' + this.state.restaurant + '/' + this.state.id}>Commander</Link>
-        </div>
+      <div className="MenuList">
+        <h1>Les Menus Proposés</h1>
+        <ul>
+          {menu}
+        </ul>
+        <ModalDetail
+          menu={this.state.detail}
+          handleClose={this.handleCloseDetail.bind(this)}
+          open={this.state.openDetail}
+          Transition={Transition} />
+        <ModalCommande
+          menu={this.state.detail}
+          handleClose={this.handleCloseCommande.bind(this)}
+          open={this.state.openCommande}
+          Transition={Transition} />
       </div>
     );
   }
 }
-
-export default Menu;
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
+export default MenuList;

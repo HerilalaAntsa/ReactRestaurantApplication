@@ -1,6 +1,4 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
-import {MENURESTAURANTDETAIL, COMMANDERMENU} from '../../constants/routes';
 
 function MenuList(props){
     let dessert = Object.keys(props.item.dessert).map((key)=>{
@@ -22,7 +20,6 @@ function MenuList(props){
                 </li>
     })
     return (
-        
         <li key={props.item._id} index={props.item.index}>
             {props.item.nom}
             Prix : {props.item.prix}
@@ -38,12 +35,12 @@ function MenuList(props){
                 Dessert
                 {dessert}
             </ul>
-            <Link to={MENURESTAURANTDETAIL + '/' + props.id + '/' + props.item._id}>
+            <p onClick={() => props.handleClickOpenDetail(props.item)}>
                 Voir ce menu
-            </Link>
-            <Link to={COMMANDERMENU + '/' + props.id + '/' + props.item._id + '/commander'}>
+            </p>
+            <p onClick={() => props.handleClickOpenCommande(props.item)}>
                 Commander ce menu
-            </Link>
+            </p>
         </li>
     )
 }

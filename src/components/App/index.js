@@ -14,13 +14,15 @@ import AccountPage from '../Account';
 import AdminPage from '../Admin';
 import RestaurantList from '../RestaurantList';
 import Restaurant from '../Restaurant';
-import MenuList from '../MenuList';
-import Menu from '../Menu';
+import MenuList from '../Menu';
 
 import * as ROUTES from '../../constants/routes';
+import Commande from '../Commande';
 
 
 const App = () => (
+  <div className="App">
+  <Commande/>
   <Router>
     <div>
       <Navigation />
@@ -37,9 +39,9 @@ const App = () => (
       <Route path={ROUTES.ACCUEIL} component={RestaurantList} />
       <Route path={ROUTES.RESTAURANT + '/:id'} component={Restaurant} />
       <Route path={ROUTES.MENURESTAURANT + '/:id'} component={MenuList} />
-      <Route path={ROUTES.MENURESTAURANTDETAIL + '/:restaurant/:id'} component={Menu} />
     </div>
   </Router>
+  </div>
 );
 
 export default App;
