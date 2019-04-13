@@ -1,53 +1,51 @@
-import React, { Component } from 'react';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import StepperCommandeForm from './StepperCommandeForm';
-import { StepButton } from '@material-ui/core';
 
-class StepperCommande extends Component {
+import React, { Component } from 'react';
+import { Stepper, Typography, Button, Step, StepButton } from '@material-ui/core';
+import StepperCommandeForm from './StepperCommandeForm';
+
+
+class HorizontalNonLinearStepper extends Component {
   constructor(props) {
     super(props);
     this.state = {
       activeStep: 0,
       menu: props.menu,
-      commande: {},
-      completed: {},
+      completed:{},
     }
   }
-getSteps() {
-  return ['Choix de l\'Hors d\'oeuvre', 'Choix du Plat', 'Choix du Dessert'];
-}
-
-getStepContent(step) {
-  switch (step) {
-    case 0:
-      return <StepperCommandeForm
-        name="horsdoeuvre"
-        label="Que prendriez-vous comme hors d'oeuvre ?"
-        option={this.state.menu.horsdoeuvre}
-        refFunction={(input)=>this.horsdoeuvre = input}/>;
-    case 1:
-      return <StepperCommandeForm
-        name="plat"
-        label="Que voudriez-vous comme plat ?"
-        option={this.state.menu.plat}
-        refFunction={(input)=> this.plat = input} />;
-    case 2:
-      return <StepperCommandeForm
-        name="dessert"
-        label="Pour finir, quel sera votre dessert ?"
-        option={this.state.menu.dessert}
-        refFunction={(input)=> this.dessert = input} />;
-    default:
-      return '&Eacute;tape inconnue';
+  getSteps() {
+    return ['Choix de l\'Hors d\'oeuvre', 'Choix du Plat', 'Choix du Dessert'];
   }
-}
 
-  totalSteps = () => this.getSteps().length;
+  getStepContent(step) {
+    switch (step) {
+      case 0:
+        return <StepperCommandeForm
+          name="horsdoeuvre"
+          label="Que prendriez-vous comme hors d'oeuvre ?"
+          option={this.state.menu.horsdoeuvre}
+          handleRadioSelection = {this.handleRadioSelection.bind(this)} 
+          selected={this.state.horsdoeuvre} />;
+      case 1:
+        return <StepperCommandeForm
+          name="plat"
+          label="Que voudriez-vous comme plat ?"
+          option={this.state.menu.plat}
+          handleRadioSelection = {this.handleRadioSelection.bind(this)}
+          selected={this.state.plat} />;
+      case 2:
+        return <StepperCommandeForm
+          name="dessert"
+          label="Pour finir, quel sera votre dessert ?"
+          option={this.state.menu.dessert}
+          handleRadioSelection = {this.handleRadioSelection.bind(this)}
+          selected={this.state.dessert} />;
+      default:
+        return '&Eacute;tape inconnue';
+    }
+  }
 
-  handleNext (){
+  handleNext() {
     let activeStep;
 
     if (this.isLastStep() && !this.allStepsCompleted()) {
@@ -61,36 +59,47 @@ getStepContent(step) {
     this.setState({
       activeStep,
     });
-  };
+  }
 
-  handleBack () {
-    this.setState(state => ({
-      activeStep: state.activeStep - 1,
-    }));
-  };
+  handleBack() {
+    this.setState(prevState => ({
+      activeStep: prevState.activeStep - 1,
+    }))
+  }
 
-  handleStep (step) {
+  handleReset() {
+    this.props.commandeState({
+      horsdoeuvre: undefined,
+      plat: undefined,
+      dessert: undefined,
+    })
+    this.setState({
+      activeStep: 0,
+      completed: {},
+      horsdoeuvre: undefined,
+      plat: undefined,
+      dessert: undefined,
+    });
+  }
+  handleRadioSelection(e) {
+    this.props.commandeState({
+      [e.target.name] : e.target.value,
+    });
+    const { completed } = this.state;
+    completed[this.state.activeStep] = true;
+    this.setState({
+      [e.target.name] : e.target.value,
+      completed,
+    })
+  }
+  handleStep = step => () => {
     this.setState({
       activeStep: step,
     });
   };
-
-  handleComplete = () => {
-    const { completed } = this.state;
-    completed[this.state.activeStep] = true;
-    this.setState({
-      completed,
-    });
-    this.handleNext();
-  };
-
-  handleReset = () => {
-    this.setState({
-      activeStep: 0,
-      completed: {},
-    });
-  };
-
+  totalSteps(){
+    return this.getSteps().length;
+  }
   completedSteps() {
     return Object.keys(this.state.completed).length;
   }
@@ -102,26 +111,23 @@ getStepContent(step) {
   allStepsCompleted() {
     return this.completedSteps() === this.totalSteps();
   }
-
   render() {
     const steps = this.getSteps();
     const { activeStep } = this.state;
 
     return (
       <div>
-        <Stepper activeStep={activeStep} alternativeLabel>
-          {steps.map((label, index) => {
-            return (
-              <Step key={label}>
-                <StepButton onClick={this.handleStep(index)} completed={this.state.completed[index]}>
-                  {label}
-                </StepButton>
-              </Step>
-            );
-          })}
+        <Stepper nonLinear activeStep={activeStep} alternativeLabel>
+          {steps.map((label, index) => (
+            <Step key={label}>
+              <StepButton onClick={this.handleStep(index)} completed={this.state.completed[index]}>
+                {label}
+              </StepButton>
+            </Step>
+          ))}
         </Stepper>
         <div>
-          {activeStep === steps.length ? (
+          {this.allStepsCompleted() ? (
             <div>
               <Typography>
                 Vos choix sont enregistrés, vous pouvez soumettre ce menu à la commande !
@@ -155,5 +161,4 @@ getStepContent(step) {
     );
   }
 }
-
-export default StepperCommande;
+export default HorizontalNonLinearStepper

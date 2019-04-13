@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import { DialogTitle, DialogContent, DialogActions, Button, Typography } from '@material-ui/core';
-import StepperCommande from './StepperCommande';
 import { base } from '../../constants/base';
 import { withSnackbar } from 'notistack';
 
@@ -22,36 +21,24 @@ class ModalCommande extends Component {
     console.log("Will unmount");
     base.removeBinding(this.ref);
   }
-  commandeComplete() {
-    return !(
-      (typeof this.state.horsdoeuvre !== 'undefined' && this.state.horsdoeuvre !== null)
-      && (typeof this.state.plat !== 'undefined' && this.state.plat !== null)
-      && (typeof this.state.dessert !== 'undefined' && this.state.dessert !== null)
-    )
-  }
   addCommande() {
     this.props.toggleLoading(true);
     const copieCommande = { ...this.state.commande }; // spread operator permert de cloner des object
     copieCommande[this.props.resto] = copieCommande[this.props.resto] || { 'menu': {}, 'carte': {} };
-    copieCommande[this.props.resto]['menu'] = copieCommande[this.props.resto]['menu'] || {};
-    copieCommande[this.props.resto]['menu'][this.props.menu._id] = copieCommande[this.props.resto]['menu'][this.props.menu._id] || {};
-    let key = this.state.horsdoeuvre + this.state.plat + this.state.dessert;
-    copieCommande[this.props.resto]['menu'][this.props.menu._id][key] = copieCommande[this.props.resto]['menu'][this.props.menu._id][key] || {};
-    let qte = copieCommande[this.props.resto]['menu'][this.props.menu._id][key]['qte'] || 0;
+    copieCommande[this.props.resto]['carte'] = copieCommande[this.props.resto]['carte'] ||{};
+    copieCommande[this.props.resto]['carte'][this.props.carte._id] = copieCommande[this.props.resto]['carte'][this.props.carte._id] || {};
+    let qte = copieCommande[this.props.resto]['carte'][this.props.carte._id]['qte'] || 0;
     let newCommande = {
       'qte': qte + 1,
-      'horsdoeuvre': this.state.horsdoeuvre,
-      'plat': this.state.plat,
-      'dessert': this.state.dessert,
-      'item': this.props.menu
+      'item': this.props.carte
     }
-    copieCommande[this.props.resto]['menu'][this.props.menu._id][key] = newCommande;
+    copieCommande[this.props.resto]['carte'][this.props.carte._id] = newCommande;
     this.setState({
       commande: copieCommande
     });
     this.props.toggleLoading(false);
     this.props.handleClose();
-    this.props.enqueueSnackbar("Le menu \" " + this.props.menu.nom + " \" a été correctement ajouté à la commande",
+    this.props.enqueueSnackbar("Un(e) \" " + this.props.carte.nom + " \" a été correctement ajouté(e) à la commande",
       {
         variant: 'default',
         anchorOrigin: {
@@ -68,20 +55,20 @@ class ModalCommande extends Component {
         TransitionComponent={this.props.Transition}
         aria-labelledby="commande"
       >
-        <DialogTitle id="commande">Commander "{this.props.menu.nom}"
+        <DialogTitle id="commande">{this.props.carte.type}
         <Typography>
-            Ar {Intl.NumberFormat().format(this.props.menu.prix)}
+            Ar {Intl.NumberFormat().format(this.props.carte.prix)}
           </Typography>
         </DialogTitle>
         <DialogContent>
-          <StepperCommande menu={this.props.menu} commandeState={this.setState.bind(this)} />
+          <Typography>Voulez vous ajouter un(e) "{this.props.carte.nom}" à la commande ?</Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={this.props.handleClose} color="primary">
             Annuler
         </Button>
-          <Button disabled={this.commandeComplete()} onClick={this.addCommande.bind(this)} color="primary">
-            Soumettre le menu
+          <Button onClick={this.addCommande.bind(this)} color="primary">
+            Ajouter à la commande
         </Button>
         </DialogActions>
       </Dialog>

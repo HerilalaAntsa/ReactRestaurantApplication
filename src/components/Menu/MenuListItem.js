@@ -44,4 +44,4 @@ function MenuListItem(props){
         </li>
     )
 }
-export default MenuListItem
+export default MenuListItem;

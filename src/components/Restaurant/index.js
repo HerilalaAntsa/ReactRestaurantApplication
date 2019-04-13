@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import RestaurantDetail from './RestaurantItem';
-import base from '../../constants/base';
+import {base} from '../../constants/base';
 import {Link} from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
 
@@ -15,7 +15,6 @@ class Restaurant extends Component {
 
   componentWillMount() {
     console.log("Will mount")
-    // this runs right before the <App> is rendered
     this.ref = base.syncState("restaurant/" + this.state.id, {
       context: this,
       state: 'restaurant'
