@@ -3,7 +3,7 @@ import MenuListItem from './MenuListItem';
 import base from '../../constants/base';
 import ModalDetail from './ModalDetail';
 import ModalCommande from './ModalCommande';
-import { Slide, CircularProgress } from '@material-ui/core';
+import { Slide, CircularProgress, Dialog, DialogContent } from '@material-ui/core';
 
 class MenuList extends Component {
   constructor(props) {
@@ -12,7 +12,7 @@ class MenuList extends Component {
       id: props.match.params.id,
       menu: {},
       openDetail: false,
-      openCommande: false ,
+      openCommande: false,
       detail: {},
       loading: false,
     }
@@ -29,6 +29,11 @@ class MenuList extends Component {
   handleCloseDetail() {
     this.setState({ openDetail: false });
   }
+  toggleLoading(newloading) {
+    this.setState({
+      loading: newloading,
+    });
+  }
 
   componentWillMount() {
     console.log("Will mount");
@@ -43,12 +48,6 @@ class MenuList extends Component {
     console.log("Will unmount");
     base.removeBinding(this.ref);
   }
-  toggleLoading() {
-    const {loading} = this.props;
-    this.setState({
-      loading : !loading,
-    });
-  }
   render() {
     let menu = Object.keys(this.state.menu).map((key) => {
       let item = this.state.menu[key];
@@ -58,7 +57,7 @@ class MenuList extends Component {
         item={item}
         handleClickOpenDetail={this.handleClickOpenDetail.bind(this)}
         handleClickOpenCommande={this.handleClickOpenCommande.bind(this)}
-       />
+      />
     })
     return (
       <div className="MenuList">
@@ -78,7 +77,11 @@ class MenuList extends Component {
           open={this.state.openCommande}
           toggleLoading={this.toggleLoading.bind(this)}
           Transition={Transition} />
-          {this.state.loading && <CircularProgress size={68} />}
+        <Dialog open={this.state.loading} onClose={() => { }} aria-labelledby="Chargement...">
+          <DialogContent>
+            <CircularProgress size={68} />
+          </DialogContent>
+        </Dialog>
       </div>
     );
   }

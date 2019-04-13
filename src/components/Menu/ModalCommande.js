@@ -31,7 +31,7 @@ class ModalCommande extends Component {
     )
   }
   addCommande() {
-    this.props.toggleLoading();
+    this.props.toggleLoading(true);
     const copieCommande = { ...this.state.commande }; // spread operator permert de cloner des object
     copieCommande[this.props.resto] = copieCommande[this.props.resto] || { 'menu': {}, 'carte': {} };
     copieCommande[this.props.resto]['menu'][this.props.menu._id] = copieCommande[this.props.resto]['menu'][this.props.menu._id] || {};
@@ -48,21 +48,18 @@ class ModalCommande extends Component {
     }
     copieCommande[this.props.resto]['menu'][this.props.menu._id][key] = newCommande;
     this.setState({
-      //commande: copieCommande
-      commande: {}
-    }, () => {
-      console.log(this);
-      this.props.handleClose();
-      this.props.toggleLoading();
-      this.props.enqueueSnackbar("Le menu \" " + this.props.menu.nom + " \" a été correctement ajouté à la commande",
-        {
-          variant: 'default',
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'center',
-          },
-        });
+      commande: copieCommande
     });
+    this.props.toggleLoading(false);
+    this.props.handleClose();
+    this.props.enqueueSnackbar("Le menu \" " + this.props.menu.nom + " \" a été correctement ajouté à la commande",
+      {
+        variant: 'default',
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'center',
+        },
+      });
   }
   render() {
     return (
