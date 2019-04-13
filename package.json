@@ -7,11 +7,14 @@
     "@material-ui/icons": "^3.0.2",
     "contentful": "^7.5.0",
     "firebase": "^5.9.4",
+    "notistack": "^0.6.1",
+    "npm": "^6.9.0",
     "re-base": "2.2.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "2.1.8"
+    "react-scripts": "2.1.8",
+    "typeface-roboto": "0.0.54"
   },
   "scripts": {
     "start": "react-scripts start",

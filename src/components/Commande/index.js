@@ -26,13 +26,6 @@ class Commande extends Component {
     this.input.value = '';
   }
 
-  changeInputMessage(event) {
-
-    this.setState({
-      input: event.target.value
-    });
-  }
-
   componentWillMount() {
     console.log("Will mount")
     // this runs right before the <App> is rendered
@@ -55,9 +48,16 @@ class Commande extends Component {
         switch (cat) {
           case 'menu': detailCommande = Object.keys(restaurant[cat]).map((i) => {
             let item = restaurant[cat][i];
-            return <DetailCommandeMenu key={i}
-              commande={item}
+            let detail = Object.keys(item).map((j)=>{
+              let value = item[j];
+              return <DetailCommandeMenu key={j}
+              index={j}
+              commande={value}
               removeCommande={this.removeCommande.bind(this)} />
+            })
+            return <ul key={i}>
+                        {detail}
+                      </ul>
           });break;
           default:;
         }

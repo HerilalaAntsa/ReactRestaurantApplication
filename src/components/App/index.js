@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -20,32 +20,36 @@ import Logout from '../Logout';
 
 import * as ROUTES from '../../constants/routes';
 import Commande from '../Commande';
+import { SnackbarProvider } from 'notistack';
 
 
-const App = () => (
-  <div className="App">
-  <Commande/>
-  <Router>
-    <div>
-      <Navigation />
+class App extends Component {
+  render() {
+    return (
+      <SnackbarProvider className="App" maxSnack={3}>
+        <Commande />
+        <Router>
+          <div>
+            <Navigation />
 
-      <hr />
+            <hr />
 
-      <Route exact path={ROUTES.LANDING} component={LandingPage} />
-      <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
-      <Route path={ROUTES.LOGIN} component={Login} />
-      <Route path={ROUTES.LOGOUT} component={Logout} />
-      <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
-      <Route path={ROUTES.HOME} component={HomePage} />
-      <Route path={ROUTES.ACCOUNT} component={AccountPage} />
-      <Route path={ROUTES.ADMIN} component={AdminPage} />
-      <Route path={ROUTES.ACCUEIL} component={RestaurantList} />
-      <Route path={ROUTES.RESTAURANT + '/:id'} component={Restaurant} />
-      <Route path={ROUTES.MENURESTAURANT + '/:id'} component={MenuList} />
-      <Route path={ROUTES.CARTERESTAURANT + '/:id'} component={CarteList} />
-    </div>
-  </Router>
-  </div>
-);
-
+            <Route exact path={ROUTES.LANDING} component={LandingPage} />
+            <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
+            <Route path={ROUTES.LOGIN} component={Login} />
+            <Route path={ROUTES.LOGOUT} component={Logout} />
+            <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
+            <Route path={ROUTES.HOME} component={HomePage} />
+            <Route path={ROUTES.ACCOUNT} component={AccountPage} />
+            <Route path={ROUTES.ADMIN} component={AdminPage} />
+            <Route path={ROUTES.ACCUEIL} component={RestaurantList} />
+            <Route path={ROUTES.RESTAURANT + '/:id'} component={Restaurant} />
+            <Route path={ROUTES.MENURESTAURANT + '/:id'} component={MenuList} />
+            <Route path={ROUTES.CARTERESTAURANT + '/:id'} component={CarteList} />
+          </div>
+        </Router>
+      </SnackbarProvider>
+    );
+  }
+}
 export default App;

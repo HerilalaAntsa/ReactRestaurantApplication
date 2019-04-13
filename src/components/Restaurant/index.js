@@ -13,12 +13,6 @@ class Restaurant extends Component {
     }
   }
 
-  changeInputMessage(event) {
-    this.setState({
-      input: event.target.value
-    });
-  }
-
   componentWillMount() {
     console.log("Will mount")
     // this runs right before the <App> is rendered

@@ -10,10 +10,11 @@ class MenuList extends Component {
     super(props);
     this.state = {
       id: props.match.params.id,
-      menu: {}, commande: {},
+      menu: {},
       openDetail: false,
       openCommande: false ,
-      detail: {}
+      detail: {},
+      loading: false,
     }
   }
   handleClickOpenDetail(menu) {
@@ -28,32 +29,6 @@ class MenuList extends Component {
   handleCloseDetail() {
     this.setState({ openDetail: false });
   }
-  addCommande(item, horsdoeuvre, plat, dessert) {
-    const copieCommande = { ...this.state.commande }; // spread operator permert de cloner des object
-    if (copieCommande[this.state.id]) {
-      if (copieCommande[this.state.id]['menu'][item._id]) {
-        copieCommande[this.state.id]['menu'][item._id]['qte'] += 1;
-      }
-    } else {
-      copieCommande[this.state.id] = {
-        'menu': {},
-        'carte': {}
-      }
-      copieCommande[this.state.id]['menu'][item._id] = {
-        'qte': 1,
-        'prix': item.prix,
-        'horsdoeuvre': horsdoeuvre,
-        'plat': plat,
-        'dessert': dessert,
-        'item': item
-      }
-
-    }
-    this.setState({
-      commande: copieCommande
-    });
-    console.log("commande added" + this.state.commande);
-  }
 
   componentWillMount() {
     console.log("Will mount");
@@ -62,17 +37,18 @@ class MenuList extends Component {
       context: this,
       state: 'menu'
     });
-    this.refCommande = base.syncState("commande", {
-      context: this,
-      state: 'commande'
-    })
   }
 
   componentWillUnmount() {
     console.log("Will unmount");
     base.removeBinding(this.ref);
   }
-
+  toggleLoading() {
+    const {loading} = this.props;
+    this.setState({
+      loading : !loading,
+    });
+  }
   render() {
     let menu = Object.keys(this.state.menu).map((key) => {
       let item = this.state.menu[key];
@@ -82,7 +58,7 @@ class MenuList extends Component {
         item={item}
         handleClickOpenDetail={this.handleClickOpenDetail.bind(this)}
         handleClickOpenCommande={this.handleClickOpenCommande.bind(this)}
-        addCommande={this.addCommande.bind(this)} />
+       />
     })
     return (
       <div className="MenuList">
@@ -97,9 +73,12 @@ class MenuList extends Component {
           Transition={Transition} />
         <ModalCommande
           menu={this.state.detail}
+          resto={this.state.id}
           handleClose={this.handleCloseCommande.bind(this)}
           open={this.state.openCommande}
+          toggleLoading={this.toggleLoading.bind(this)}
           Transition={Transition} />
+          {this.state.loading && <CircularProgress size={68} />}
       </div>
     );
   }
