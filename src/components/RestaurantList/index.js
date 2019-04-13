@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import base from '../../constants/base';
+import {base} from '../../constants/base';
 import RestaurantListItem from './RestaurantListItem';
 
 class RestaurantList extends Component {

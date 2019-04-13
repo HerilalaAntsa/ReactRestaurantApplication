@@ -7,7 +7,6 @@ import {
 import Navigation from '../Navigation';
 import LandingPage from '../Landing';
 import SignUpPage from '../SignUp';
-import SignInPage from '../SignIn';
 import PasswordForgetPage from '../PasswordForget';
 import HomePage from '../Home';
 import AccountPage from '../Account';
@@ -15,6 +14,9 @@ import AdminPage from '../Admin';
 import RestaurantList from '../RestaurantList';
 import Restaurant from '../Restaurant';
 import MenuList from '../Menu';
+import CarteList from '../Carte';
+import Login from '../Login';
+import Logout from '../Logout';
 
 import * as ROUTES from '../../constants/routes';
 import Commande from '../Commande';
@@ -31,7 +33,8 @@ const App = () => (
 
       <Route exact path={ROUTES.LANDING} component={LandingPage} />
       <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
-      <Route path={ROUTES.SIGN_IN} component={SignInPage} />
+      <Route path={ROUTES.LOGIN} component={Login} />
+      <Route path={ROUTES.LOGOUT} component={Logout} />
       <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
       <Route path={ROUTES.HOME} component={HomePage} />
       <Route path={ROUTES.ACCOUNT} component={AccountPage} />
@@ -39,6 +42,7 @@ const App = () => (
       <Route path={ROUTES.ACCUEIL} component={RestaurantList} />
       <Route path={ROUTES.RESTAURANT + '/:id'} component={Restaurant} />
       <Route path={ROUTES.MENURESTAURANT + '/:id'} component={MenuList} />
+      <Route path={ROUTES.CARTERESTAURANT + '/:id'} component={CarteList} />
     </div>
   </Router>
   </div>

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import MenuListItem from './MenuListItem';
-import base from '../../constants/base';
 import ModalDetail from './ModalDetail';
 import ModalCommande from './ModalCommande';
 import { Slide } from '@material-ui/core';
+import { base } from '../../constants/base';
 
 class MenuList extends Component {
   constructor(props) {

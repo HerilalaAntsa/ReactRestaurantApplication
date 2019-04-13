@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import RestaurantDetail from './RestaurantItem';
-import base from '../../constants/base';
+import {base} from '../../constants/base';
 import {Link} from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import base from '../../constants/base';
-import DetailCommandeMenu from './DetailCommandeMenu'
+import DetailCommandeMenu from './DetailCommandeMenu';
+import { base } from '../../constants/base';
 
 class Commande extends Component {
   constructor(props) {
