@@ -31,16 +31,16 @@ class ModalCommande extends Component {
     )
   }
   addCommande() {
-    this.props.toggleLoading();
+    this.props.toggleLoading(true);
     const copieCommande = { ...this.state.commande }; // spread operator permert de cloner des object
     copieCommande[this.props.resto] = copieCommande[this.props.resto] || { 'menu': {}, 'carte': {} };
+    copieCommande[this.props.resto]['menu'] = copieCommande[this.props.resto]['menu'] || {};
     copieCommande[this.props.resto]['menu'][this.props.menu._id] = copieCommande[this.props.resto]['menu'][this.props.menu._id] || {};
     let key = this.state.horsdoeuvre + this.state.plat + this.state.dessert;
     copieCommande[this.props.resto]['menu'][this.props.menu._id][key] = copieCommande[this.props.resto]['menu'][this.props.menu._id][key] || {};
     let qte = copieCommande[this.props.resto]['menu'][this.props.menu._id][key]['qte'] || 0;
     let newCommande = {
       'qte': qte + 1,
-      'prix': this.props.menu.prix,
       'horsdoeuvre': this.state.horsdoeuvre,
       'plat': this.state.plat,
       'dessert': this.state.dessert,
@@ -48,21 +48,18 @@ class ModalCommande extends Component {
     }
     copieCommande[this.props.resto]['menu'][this.props.menu._id][key] = newCommande;
     this.setState({
-      //commande: copieCommande
-      commande: {}
-    }, () => {
-      console.log(this);
-      this.props.handleClose();
-      this.props.toggleLoading();
-      this.props.enqueueSnackbar("Le menu \" " + this.props.menu.nom + " \" a été correctement ajouté à la commande",
-        {
-          variant: 'default',
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'center',
-          },
-        });
+      commande: copieCommande
     });
+    this.props.toggleLoading(false);
+    this.props.handleClose();
+    this.props.enqueueSnackbar("Le menu \" " + this.props.menu.nom + " \" a été correctement ajouté à la commande",
+      {
+        variant: 'default',
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'center',
+        },
+      });
   }
   render() {
     return (
@@ -70,15 +67,15 @@ class ModalCommande extends Component {
         open={this.props.open}
         onClose={this.props.handleClose}
         TransitionComponent={this.props.Transition}
-        aria-labelledby="form-dialog-title"
+        aria-labelledby="commande"
       >
-        <DialogTitle id="form-dialog-title">Commander "{this.props.menu.nom}"
+        <DialogTitle id="commande">Commander "{this.props.menu.nom}"
         <Typography>
             Ar {Intl.NumberFormat().format(this.props.menu.prix)}
           </Typography>
         </DialogTitle>
         <DialogContent>
-          <HorizontalNonLinearStepper menu={this.props.menu} commandeState={this.setState.bind(this)} />
+          <StepperCommande menu={this.props.menu} commandeState={this.setState.bind(this)} />
         </DialogContent>
         <DialogActions>
           <Button onClick={this.props.handleClose} color="primary">

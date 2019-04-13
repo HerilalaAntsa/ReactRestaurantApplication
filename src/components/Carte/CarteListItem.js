@@ -1,12 +1,6 @@
 import React from 'react';
 
 function CarteListItem(props){
-    let plat = Object.keys(props.item).map((key)=>{
-        let item = props.item[key];
-        return <li key={item._id}>
-                    {item.nom}
-                </li>
-    });
     return (
         <li key={props.item._id} index={props.item.index}>
             {props.item.nom}

@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import CarteListItem from './CarteListItem';
 import { app, base } from '../../constants/base';
 import ModalCommande from './ModalCommande';
-import Login from '../Login';
-import { Slide } from '@material-ui/core';
+import { Slide, Dialog, DialogContent } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -36,7 +35,7 @@ class CarteList extends Component {
     super(props);
     this.state = {
       id: props.match.params.id,
-      carte: {}, commande: {}, categorie: {},
+      carte: {}, categorie: {},
       openCommande: false,
       openLogin: false,
       detail: {},
@@ -104,10 +103,6 @@ class CarteList extends Component {
       context: this,
       state: 'carte'
     });
-    this.refCommande = base.syncState("commande/", {
-      context: this,
-      state: 'commande'
-    })
     this.refCategorie = base.syncState("categorie/", {
       context: this,
       state: 'categorie/'
@@ -117,6 +112,12 @@ class CarteList extends Component {
   componentWillUnmount() {
     this.removeAuthListener(); 
     base.removeBinding(this.ref);
+  }
+
+  toggleLoading(newloading) {
+    this.setState({
+      loading: newloading,
+    });
   }
 
   render() {
@@ -132,9 +133,7 @@ class CarteList extends Component {
         id={this.state.id}
         item={item}
         authentificated = {this.state.authentificated}
-        handleClickOpenCommande={this.handleClickOpenCommande.bind(this)}
-        handleClickOpenLogin={this.handleClickOpenLogin.bind(this)}
-        addCommande={this.addCommande.bind(this)} />
+        handleClickOpenCommande={this.handleClickOpenCommande.bind(this)} />
 
       switch (item.type) {
         case "Hors d'oeuvre":
@@ -175,15 +174,17 @@ class CarteList extends Component {
           {value === 4 && <TabContainer>{tabAutre}</TabContainer>}
         </div>
         <ModalCommande
+          resto={this.state.id}
           carte={this.state.detail}
           handleClose={this.handleCloseCommande.bind(this)}
           open={this.state.openCommande}
+          toggleLoading={this.toggleLoading.bind(this)}
           Transition={Transition} />
-        <Login
-          carte={this.state.detail}
-          handleClose={this.handleCloseLogin.bind(this)}
-          open={this.state.openLogin}
-          Transition={Transition} />
+          <Dialog open={this.state.loading} onClose={() => { }} aria-labelledby="Chargement...">
+            <DialogContent>
+              <CircularProgress size={68} />
+            </DialogContent>
+          </Dialog>
       </div>
     );
   }

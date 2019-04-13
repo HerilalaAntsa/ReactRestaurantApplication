@@ -15,7 +15,6 @@ class Restaurant extends Component {
 
   componentWillMount() {
     console.log("Will mount")
-    // this runs right before the <App> is rendered
     this.ref = base.syncState("restaurant/" + this.state.id, {
       context: this,
       state: 'restaurant'
