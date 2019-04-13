@@ -18,7 +18,9 @@ function CarteListItem(props){
                 ?   <p onClick={() => props.handleClickOpenCommande(props.item)}>
                         Commander ce plat
                     </p>
-                : null
+                :   <p onClick={() => props.handleClickOpenLogin(props.item)}>
+                        Commander ce plat
+                    </p>
             }
         </li>
     )

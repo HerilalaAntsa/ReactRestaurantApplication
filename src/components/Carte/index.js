@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import CarteListItem from './CarteListItem';
 import { app, base } from '../../constants/base';
 import ModalCommande from './ModalCommande';
+import Login from '../Login';
 import { Slide } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -37,6 +38,7 @@ class CarteList extends Component {
       id: props.match.params.id,
       carte: {}, commande: {}, categorie: {},
       openCommande: false,
+      openLogin: false,
       detail: {},
       value: 0,
       loading: false,
@@ -45,11 +47,17 @@ class CarteList extends Component {
   handleChange = (event, value) => {
     this.setState({ value });
   };
+  handleClickOpenLogin(carte) {
+    this.setState({ openLogin: true, detail: carte });
+  }
   handleClickOpenCommande(carte) {
     this.setState({ openCommande: true, detail: carte });
   }
   handleCloseCommande() {
     this.setState({ openCommande: false });
+  }
+  handleCloseLogin() {
+    this.setState({ openLogin: false });
   }
   addCommande(item) {
     const copieCommande = { ...this.state.commande }; // spread operator permert de cloner des object
@@ -112,12 +120,6 @@ class CarteList extends Component {
   }
 
   render() {
-    if(this.state.loading === true){
-      return (
-        <div>
-          <CircularProgress disableShrink />;
-        </div>
-    )}
     let tabHorsDoeuvre = [];
     let tabPlat = [];
     let tabDessert = [];
@@ -131,6 +133,7 @@ class CarteList extends Component {
         item={item}
         authentificated = {this.state.authentificated}
         handleClickOpenCommande={this.handleClickOpenCommande.bind(this)}
+        handleClickOpenLogin={this.handleClickOpenLogin.bind(this)}
         addCommande={this.addCommande.bind(this)} />
 
       switch (item.type) {
@@ -175,6 +178,11 @@ class CarteList extends Component {
           carte={this.state.detail}
           handleClose={this.handleCloseCommande.bind(this)}
           open={this.state.openCommande}
+          Transition={Transition} />
+        <Login
+          carte={this.state.detail}
+          handleClose={this.handleCloseLogin.bind(this)}
+          open={this.state.openLogin}
           Transition={Transition} />
       </div>
     );

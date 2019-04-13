@@ -9,7 +9,7 @@ const Navigation = () => (
         <Link to={ROUTES.LOGIN}>Log in</Link>
       </li>
       <li>
-        <Link to={ROUTES.LOGIN}>Log out</Link>
+        <Link to={ROUTES.LOGOUT}>Log out</Link>
       </li>
       <li>
         <Link to={ROUTES.LANDING}>Landing</Link>

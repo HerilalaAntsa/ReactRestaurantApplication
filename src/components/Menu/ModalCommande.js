@@ -3,7 +3,7 @@ import Dialog from '@material-ui/core/Dialog';
 import { DialogTitle, DialogContent, DialogActions, Button, Typography } from '@material-ui/core';
 import StepperCommande from './StepperCommande';
 import HorizontalNonLinearStepper from './HorizontalNonLinearStepper';
-import base from '../../constants/base';
+import {base} from '../../constants/base';
 import { withSnackbar } from 'notistack';
 
 class ModalCommande extends Component {
