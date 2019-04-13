@@ -1,6 +1,6 @@
 import React from 'react';
 
-function MenuList(props){
+function MenuListItem(props){
     let dessert = Object.keys(props.item.dessert).map((key)=>{
         let item = props.item.dessert[key];
         return <li key={item._id}>
@@ -44,4 +44,4 @@ function MenuList(props){
         </li>
     )
 }
-export default MenuList
+export default MenuListItem

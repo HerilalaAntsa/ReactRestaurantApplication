@@ -1,32 +1,96 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Dialog from '@material-ui/core/Dialog';
-import { DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
+import { DialogTitle, DialogContent, DialogActions, Button, Typography } from '@material-ui/core';
 import StepperCommande from './StepperCommande';
+import HorizontalNonLinearStepper from './HorizontalNonLinearStepper';
+import base from '../../constants/base';
+import { withSnackbar } from 'notistack';
 
-function ModalCommande(props) {
-  return (
-    <Dialog
-      open={props.open}
-      onClose={props.handleClose}
-      TransitionComponent={props.Transition}
-      aria-labelledby="form-dialog-title"
-    >
-      <DialogTitle id="form-dialog-title">Commander "{props.menu.nom}"</DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          Ar {Intl.NumberFormat().format(props.menu.prix)}
-        </DialogContentText>
-        <StepperCommande />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={props.handleClose} color="primary">
-          Cancel
+class ModalCommande extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      commande: {},
+    }
+  }
+  componentWillMount() {
+    this.ref = base.syncState("commande", {
+      context: this,
+      state: 'commande'
+    })
+  }
+  componentWillUnmount() {
+    console.log("Will unmount");
+    base.removeBinding(this.ref);
+  }
+  commandeComplete() {
+    return !(
+      (typeof this.state.horsdoeuvre !== 'undefined' && this.state.horsdoeuvre !== null)
+      && (typeof this.state.plat !== 'undefined' && this.state.plat !== null)
+      && (typeof this.state.dessert !== 'undefined' && this.state.dessert !== null)
+    )
+  }
+  addCommande() {
+    this.props.toggleLoading();
+    const copieCommande = { ...this.state.commande }; // spread operator permert de cloner des object
+    copieCommande[this.props.resto] = copieCommande[this.props.resto] || { 'menu': {}, 'carte': {} };
+    copieCommande[this.props.resto]['menu'][this.props.menu._id] = copieCommande[this.props.resto]['menu'][this.props.menu._id] || {};
+    let key = this.state.horsdoeuvre + this.state.plat + this.state.dessert;
+    copieCommande[this.props.resto]['menu'][this.props.menu._id][key] = copieCommande[this.props.resto]['menu'][this.props.menu._id][key] || {};
+    let qte = copieCommande[this.props.resto]['menu'][this.props.menu._id][key]['qte'] || 0;
+    let newCommande = {
+      'qte': qte + 1,
+      'prix': this.props.menu.prix,
+      'horsdoeuvre': this.state.horsdoeuvre,
+      'plat': this.state.plat,
+      'dessert': this.state.dessert,
+      'item': this.props.menu
+    }
+    copieCommande[this.props.resto]['menu'][this.props.menu._id][key] = newCommande;
+    this.setState({
+      //commande: copieCommande
+      commande: {}
+    }, () => {
+      console.log(this);
+      this.props.handleClose();
+      this.props.toggleLoading();
+      this.props.enqueueSnackbar("Le menu \" " + this.props.menu.nom + " \" a été correctement ajouté à la commande",
+        {
+          variant: 'default',
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: 'center',
+          },
+        });
+    });
+  }
+  render() {
+    return (
+      <Dialog
+        open={this.props.open}
+        onClose={this.props.handleClose}
+        TransitionComponent={this.props.Transition}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">Commander "{this.props.menu.nom}"
+        <Typography>
+            Ar {Intl.NumberFormat().format(this.props.menu.prix)}
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          <HorizontalNonLinearStepper menu={this.props.menu} commandeState={this.setState.bind(this)} />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={this.props.handleClose} color="primary">
+            Annuler
         </Button>
-        <Button onClick={props.handleClose} color="primary">
-          Subscribe
+          <Button disabled={this.commandeComplete()} onClick={this.addCommande.bind(this)} color="primary">
+            Soumettre le menu
         </Button>
-      </DialogActions>
-    </Dialog>
-  )
+        </DialogActions>
+      </Dialog>
+    )
+  }
+
 }
-export default ModalCommande
+export default withSnackbar(ModalCommande)
