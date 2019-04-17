@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, FormHelperText, Typography } from "@material-ui/core";
+import { FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, FormHelperText, Typography, Grid } from "@material-ui/core";
 
 function StepperCommandeForm(props) {
     let radio = Object.keys(props.option).map(function (key) {
@@ -16,19 +16,25 @@ function StepperCommandeForm(props) {
                     <Typography>{item.nom}</Typography>
                     <FormHelperText>{item.description}</FormHelperText>
                 </span>
-            } />    
+            } />
     });
     return (
         <FormControl component="fieldset">
-            <FormLabel component="legend">{props.label}</FormLabel>
-            <RadioGroup
-                aria-label={props.name}
-                name={props.name}
-                value={props.selected}
-                onChange={props.handleRadioSelection}
-            >
-                {radio}
-            </RadioGroup>
+            <Grid container spacing={8}>
+                <Grid item>
+                    <FormLabel component="legend">{props.label}</FormLabel>
+                </Grid>
+                <Grid item>
+                    <RadioGroup
+                        aria-label={props.name}
+                        name={props.name}
+                        value={props.selected}
+                        onChange={props.handleRadioSelection}
+                    >
+                        {radio}
+                    </RadioGroup>
+                </Grid>
+            </Grid>
         </FormControl>
     )
 }

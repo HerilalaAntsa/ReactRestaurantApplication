@@ -7,7 +7,7 @@ import { Typography } from '@material-ui/core';
 class Commande extends Component {
   constructor(props) {
     super(props);
-    this.state = { commande: {} }
+    this.state = { commande: {}, restaurant: {} }
   }
   removeCommandeCarte(resto, commande) {
     const copieCommande = { ...this.state.commande }; // spread operator permert de cloner des object
@@ -51,17 +51,23 @@ class Commande extends Component {
       context: this,
       state: 'commande'
     });
+    this.refResto = base.bindToState("restaurant", {
+      context: this,
+      state: 'restaurant'
+    });
   }
 
   componentWillUnmount() {
     console.log("Will unmount");
     base.removeBinding(this.ref);
+    base.removeBinding(this.refResto);
   }
 
   render() {
     let total = 0;
     let listcommande = Object.keys(this.state.commande).map((key) => {
       let restaurant = this.state.commande[key];
+      let restaurantValue = this.state.restaurant[key] || {nom:key};
       let categorie = Object.keys(restaurant).map((cat) => {
         let detailCommande = [];
         switch (cat) {
@@ -102,7 +108,7 @@ class Commande extends Component {
         </li>
       })
       return <li key={key}>
-        {key}
+        {restaurantValue.nom}
         <ul>
           {categorie}
         </ul>

@@ -2,8 +2,14 @@ import React, { Component } from 'react';
 import MenuListItem from './MenuListItem';
 import ModalDetail from './ModalDetail';
 import ModalCommande from './ModalCommande';
-import { Slide, CircularProgress, Dialog, DialogContent } from '@material-ui/core';
+import { Slide, CircularProgress, Dialog, DialogContent, List, Grid, Typography, withStyles } from '@material-ui/core';
 import { base } from '../../constants/base';
+
+const styles = theme => ({
+  titre: {
+    fontFamily: 'Allura'
+  },
+});
 
 class MenuList extends Component {
   constructor(props) {
@@ -51,20 +57,28 @@ class MenuList extends Component {
   render() {
     let menu = Object.keys(this.state.menu).map((key) => {
       let item = this.state.menu[key];
-      return <MenuListItem
-        key={key}
-        id={this.state.id}
-        item={item}
-        handleClickOpenDetail={this.handleClickOpenDetail.bind(this)}
-        handleClickOpenCommande={this.handleClickOpenCommande.bind(this)}
-      />
+      return <Grid item
+        key={key}>
+        <MenuListItem
+          item={item}
+          handleClickOpenDetail={this.handleClickOpenDetail.bind(this)}
+          handleClickOpenCommande={this.handleClickOpenCommande.bind(this)}
+        />
+      </Grid>
     })
+    const { classes } = this.props;
     return (
       <div className="MenuList">
-        <h1>Les Menus Proposés</h1>
-        <ul>
+        <Typography
+          className={classes.titre}
+          variant="h3"
+          align="center"
+          gutterBottom>
+          Les Menus Proposés
+        </Typography>
+        <Grid container spacing={24} justify="center" alignItems="center">
           {menu}
-        </ul>
+        </Grid>
         <ModalDetail
           menu={this.state.detail}
           handleClose={this.handleCloseDetail.bind(this)}
@@ -89,4 +103,4 @@ class MenuList extends Component {
 function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
-export default MenuList;
+export default withStyles(styles)(MenuList);

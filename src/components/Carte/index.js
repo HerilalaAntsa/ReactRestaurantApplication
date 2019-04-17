@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import CarteListItem from './CarteListItem';
 import { app, base } from '../../constants/base';
 import ModalCommande from './ModalCommande';
-import { Slide, Dialog, DialogContent } from '@material-ui/core';
+import { Slide, Dialog, DialogContent, List } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -27,6 +27,9 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
+  },
+  titre: {
+    fontFamily: 'Allura'
   },
 });
 
@@ -54,12 +57,12 @@ class CarteList extends Component {
 
   componentWillMount() {
     this.removeAuthListener = app.auth().onAuthStateChanged((user) => {
-      if(user){
+      if (user) {
         this.setState({
           authentificated: true,
           loading: false
         })
-      }else{
+      } else {
         this.setState({
           authentificated: false,
           loading: true
@@ -77,7 +80,7 @@ class CarteList extends Component {
   }
 
   componentWillUnmount() {
-    this.removeAuthListener(); 
+    this.removeAuthListener();
     base.removeBinding(this.ref);
   }
 
@@ -88,26 +91,25 @@ class CarteList extends Component {
   }
 
   render() {
-    if(this.state.loading === true){
+    if (this.state.loading === true) {
       return (
         <div>
           <CircularProgress disableShrink />;
         </div>
-    )}
+      )
+    }
     let tabHorsDoeuvre = [];
     let tabPlat = [];
     let tabDessert = [];
     let tabAutre = [];
     let carte = Object.keys(this.state.carte).map((key) => {
       let item = this.state.carte[key];
-      
       let comp = <CarteListItem
-        key={item._id}
-        id={this.state.id}
-        item={item}
-        authentificated = {this.state.authentificated}
-        handleClickOpenCommande={this.handleClickOpenCommande.bind(this)} />
-
+                    key={item._id}
+                    id={this.state.id}
+                    item={item}
+                    authentificated={this.state.authentificated}
+                    handleClickOpenCommande={this.handleClickOpenCommande.bind(this)} />
       switch (item.type) {
         case "Hors d'oeuvre":
           tabHorsDoeuvre.push(comp);
@@ -129,7 +131,13 @@ class CarteList extends Component {
     const { value } = this.state;
     return (
       <div className="CarteList">
-        <h1>Notre Carte</h1>
+        <Typography
+          className={classes.titre}
+          variant="h3"
+          align="center"
+          gutterBottom>
+          La Carte
+        </Typography>
         <div className={classes.root}>
           <AppBar position="static">
             <Tabs value={value} onChange={this.handleChange}>
@@ -140,11 +148,15 @@ class CarteList extends Component {
               <Tab label="Autres" />
             </Tabs>
           </AppBar>
-          {value === 0 && <TabContainer>{carte}</TabContainer>}
-          {value === 1 && <TabContainer>{tabHorsDoeuvre}</TabContainer>}
-          {value === 2 && <TabContainer>{tabPlat}</TabContainer>}
-          {value === 3 && <TabContainer>{tabDessert}</TabContainer>}
-          {value === 4 && <TabContainer>{tabAutre}</TabContainer>}
+          <TabContainer>
+            <List>
+          {value === 0 && carte}
+          {value === 1 && tabHorsDoeuvre}
+          {value === 2 && tabPlat}
+          {value === 3 && tabDessert}
+          {value === 4 && tabAutre}
+            </List>
+          </TabContainer>
         </div>
         <ModalCommande
           resto={this.state.id}
@@ -153,11 +165,11 @@ class CarteList extends Component {
           open={this.state.openCommande}
           toggleLoading={this.toggleLoading.bind(this)}
           Transition={Transition} />
-          <Dialog open={this.state.loading} onClose={() => { }} aria-labelledby="Chargement...">
-            <DialogContent>
-              <CircularProgress size={68} />
-            </DialogContent>
-          </Dialog>
+        <Dialog open={this.state.loading} onClose={() => { }} aria-labelledby="Chargement...">
+          <DialogContent>
+            <CircularProgress size={68} />
+          </DialogContent>
+        </Dialog>
       </div>
     );
   }

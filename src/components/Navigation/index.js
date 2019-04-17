@@ -12,9 +12,6 @@ const Navigation = () => (
         <Link to={ROUTES.LOGIN}>Log out</Link>
       </li>
       <li>
-        <Link to={ROUTES.LANDING}>Landing</Link>
-      </li>
-      <li>
         <Link to={ROUTES.HOME}>Home</Link>
       </li>
       <li>
