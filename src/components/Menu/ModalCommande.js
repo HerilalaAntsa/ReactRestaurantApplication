@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import { DialogTitle, DialogContent, DialogActions, Button, Typography } from '@material-ui/core';
 import StepperCommande from './StepperCommande';
-import { base } from '../../constants/base';
+import { app, base} from '../../constants/base';
 import { withSnackbar } from 'notistack';
 
 class ModalCommande extends Component {
@@ -30,14 +30,40 @@ class ModalCommande extends Component {
     )
   }
   addCommande() {
+    app.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.setState({
+          authentificated: true,
+        })
+        this.saveCommande();
+      } else {
+        app.auth().signInAnonymously()
+          .then(() => {
+            this.setState({
+              authentificated: true,
+            });
+            this.saveCommande();
+          })
+          .catch((error) => {
+            console.log(error.message)
+          })
+      }
+    });
+  }
+  saveCommande() {
     this.props.toggleLoading(true);
     const copieCommande = { ...this.state.commande }; // spread operator permert de cloner des object
-    copieCommande[this.props.resto] = copieCommande[this.props.resto] || { 'menu': {}, 'carte': {} };
-    copieCommande[this.props.resto]['menu'] = copieCommande[this.props.resto]['menu'] || {};
-    copieCommande[this.props.resto]['menu'][this.props.menu._id] = copieCommande[this.props.resto]['menu'][this.props.menu._id] || {};
+    var dateNow = new Date().toISOString().slice(0,10);
+    var currentUser = app.auth().currentUser.uid;
+    copieCommande[currentUser] = copieCommande[currentUser] || {};
+    copieCommande[currentUser][dateNow]= copieCommande[currentUser][dateNow] || {};
+    copieCommande[currentUser][dateNow][this.props.resto] = copieCommande[currentUser][this.props.resto] || { 'menu': {}, 'carte': {} };
+    copieCommande[currentUser][dateNow][this.props.resto]['menu'] = copieCommande[currentUser][dateNow][this.props.resto]['menu'] || {};
+    copieCommande[currentUser][dateNow][this.props.resto]['isConfirmed'] = false;
+    copieCommande[currentUser][dateNow][this.props.resto]['menu'][this.props.menu._id] = copieCommande[currentUser][dateNow][this.props.resto]['menu'][this.props.menu._id] || {};
     let key = this.state.horsdoeuvre + this.state.plat + this.state.dessert;
-    copieCommande[this.props.resto]['menu'][this.props.menu._id][key] = copieCommande[this.props.resto]['menu'][this.props.menu._id][key] || {};
-    let qte = copieCommande[this.props.resto]['menu'][this.props.menu._id][key]['qte'] || 0;
+    copieCommande[currentUser][dateNow][this.props.resto]['menu'][this.props.menu._id][key] = copieCommande[currentUser][dateNow][this.props.resto]['menu'][this.props.menu._id][key] || {};
+    let qte = copieCommande[currentUser][dateNow][this.props.resto]['menu'][this.props.menu._id][key]['qte'] || 0;
     let newCommande = {
       'qte': qte + 1,
       'horsdoeuvre': this.state.horsdoeuvre,
@@ -45,7 +71,7 @@ class ModalCommande extends Component {
       'dessert': this.state.dessert,
       'item': this.props.menu
     }
-    copieCommande[this.props.resto]['menu'][this.props.menu._id][key] = newCommande;
+    copieCommande[currentUser][dateNow][this.props.resto]['menu'][this.props.menu._id][key] = newCommande;
     this.setState({
       commande: copieCommande,
       horsdoeuvre: undefined,

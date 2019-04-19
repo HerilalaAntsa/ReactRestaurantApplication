@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import RestaurantDetail from './RestaurantDetail';
 import { base } from '../../constants/base';
-import { Link } from 'react-router-dom';
-import * as ROUTES from '../../constants/routes';
-import { Paper, Typography, withStyles, Button } from '@material-ui/core';
+import { Paper, Typography, withStyles } from '@material-ui/core';
 import RestaurantMap from '../RestaurantMap';
 import Leaflet from 'leaflet';
 import '../RestaurantMap/index.css';

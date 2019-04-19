@@ -43,13 +43,13 @@ class RestaurantList extends Component {
     const { classes } = this.props;
     let listRestaurant = Object.keys(this.state.restaurant).map((id) => {
       let item = this.state.restaurant[id];
-      if(item.nom.toLowerCase().indexOf(this.state.nom.toLowerCase()) !== -1
-      || item.adresse.toLowerCase().indexOf(this.state.nom.toLowerCase()) !== -1
+      if((item.nom.toLowerCase().indexOf(this.state.nom.toLowerCase()) !== -1
+      || item.adresse.toLowerCase().indexOf(this.state.nom.toLowerCase()) !== -1)
       && item.cuisine.toLowerCase().indexOf(this.state.cuisine.toLowerCase()) !== -1){
         return  <RestaurantListItem key={id}
                 item={item}>
               </RestaurantListItem>
-      }      
+      } return null;
     })
     return (
       <Grid container justify="center" alignItems="center" spacing={8} direction="column">

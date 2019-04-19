@@ -32,7 +32,9 @@ class App extends Component {
     super(props);
     this.state = {
       openCommande: true,
-    };
+      openLogin: false,
+      authentificated: false
+    }
   }
   handleDrawerOpen() {
     this.setState({ openCommande: true });
@@ -41,6 +43,13 @@ class App extends Component {
   handleDrawerClose() {
     this.setState({ openCommande: false });
   };
+  
+  handleClickOpenLogin() {
+    this.setState({ openLogin: true});
+  }
+  handleClickCloseLogin() {
+    this.setState({ openLogin: false});
+  }
 
   render() {
     return (

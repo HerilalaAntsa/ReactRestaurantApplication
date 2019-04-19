@@ -18,7 +18,7 @@ import Logout from '../Logout';
 
 import * as ROUTES from '../../constants/routes';
 import Commande from '../Commande';
-import { Drawer, CssBaseline, withStyles, IconButton, Divider, Fab, createMuiTheme, MuiThemeProvider } from '@material-ui/core';
+import { Drawer, CssBaseline, withStyles, IconButton, Divider, Fab } from '@material-ui/core';
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import classNames from 'classnames';

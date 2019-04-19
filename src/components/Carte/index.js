@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import CarteListItem from './CarteListItem';
 import { app, base } from '../../constants/base';
-import ModalCommande from './ModalCommande';
-import { Slide, Dialog, DialogContent, List, IconButton } from '@material-ui/core';
+import ModalCommandeCarte from './ModalCommandeCarte';
+import { Slide, IconButton, List } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { RESTAURANT } from '../../constants/routes';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {Link} from 'react-router-dom';
@@ -43,6 +42,7 @@ class CarteList extends Component {
       id: props.match.params.id,
       carte: {}, categorie: {},
       openCommande: false,
+      openLogin: false,
       detail: {},
       value: 0,
       loading: false,
@@ -94,13 +94,6 @@ class CarteList extends Component {
   }
 
   render() {
-    if (this.state.loading === true) {
-      return (
-        <div>
-          <CircularProgress disableShrink />
-        </div>
-      )
-    }
     let tabHorsDoeuvre = [];
     let tabPlat = [];
     let tabDessert = [];
@@ -164,18 +157,14 @@ class CarteList extends Component {
             </List>
           </TabContainer>
         </div>
-        <ModalCommande
+        <ModalCommandeCarte
           resto={this.state.id}
           carte={this.state.detail}
           handleClose={this.handleCloseCommande.bind(this)}
           open={this.state.openCommande}
           toggleLoading={this.toggleLoading.bind(this)}
           Transition={Transition} />
-        <Dialog open={this.state.loading} onClose={() => { }} aria-labelledby="Chargement...">
-          <DialogContent>
-            <CircularProgress size={68} />
-          </DialogContent>
-        </Dialog>
+          
       </div>
     );
   }
