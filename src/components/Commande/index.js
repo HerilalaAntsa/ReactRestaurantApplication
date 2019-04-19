@@ -115,7 +115,7 @@ class Commande extends Component {
       </li>
     })
     return (
-      <div className="App">
+      <div className="Commande">
         <div>
           <h2>Liste des commande</h2>
           Nombre de commande : {listcommande.length}

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import CarteListItem from './CarteListItem';
 import { app, base } from '../../constants/base';
 import ModalCommande from './ModalCommande';
-import { Slide, Dialog, DialogContent, List } from '@material-ui/core';
+import { Slide, Dialog, DialogContent, List, IconButton } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -10,6 +10,9 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { RESTAURANT } from '../../constants/routes';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import {Link} from 'react-router-dom';
 
 function TabContainer(props) {
   return (
@@ -94,7 +97,7 @@ class CarteList extends Component {
     if (this.state.loading === true) {
       return (
         <div>
-          <CircularProgress disableShrink />;
+          <CircularProgress disableShrink />
         </div>
       )
     }
@@ -131,6 +134,9 @@ class CarteList extends Component {
     const { value } = this.state;
     return (
       <div className="CarteList">
+        <IconButton component={Link} to={RESTAURANT + '/' + this.state.id}>
+          <ArrowBackIcon />
+        </IconButton>
         <Typography
           className={classes.titre}
           variant="h3"
@@ -140,7 +146,7 @@ class CarteList extends Component {
         </Typography>
         <div className={classes.root}>
           <AppBar position="static">
-            <Tabs value={value} onChange={this.handleChange}>
+            <Tabs value={value} onChange={this.handleChange} centered>
               <Tab label="Tous" />
               <Tab label="Hors d'oeuvres" />
               <Tab label="Plats" />

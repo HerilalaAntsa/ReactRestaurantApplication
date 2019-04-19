@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardHeader, CardContent, Typography, CardMedia, ListItem, List, withStyles } from '@material-ui/core';
+import { Card, CardHeader, CardContent, Typography, CardMedia, ListItem, List } from '@material-ui/core';
 
 function DetailPlat(props) {
     let item = props.plat;
@@ -9,7 +9,7 @@ function DetailPlat(props) {
                 <CardMedia
                     style={{height: 140,}}
                     // image={item.photo}
-                    image="http://calgarypma.ca/wp-content/uploads/2018/01/default-thumbnail.jpg"
+                    image={item.photo}
                     title={item.nom}
                 />
                 <CardHeader

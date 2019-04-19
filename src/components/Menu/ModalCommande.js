@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Dialog from '@material-ui/core/Dialog';
-import { DialogTitle, DialogContent, DialogActions, Button, Typography, Grid } from '@material-ui/core';
+import { DialogTitle, DialogContent, DialogActions, Button, Typography } from '@material-ui/core';
 import StepperCommande from './StepperCommande';
 import { base } from '../../constants/base';
 import { withSnackbar } from 'notistack';

@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import MenuListItem from './MenuListItem';
 import ModalDetail from './ModalDetail';
 import ModalCommande from './ModalCommande';
-import { Slide, CircularProgress, Dialog, DialogContent, List, Grid, Typography, withStyles } from '@material-ui/core';
+import { Slide, CircularProgress, Dialog, DialogContent, Grid, Typography, withStyles, IconButton } from '@material-ui/core';
 import { base } from '../../constants/base';
+import { RESTAURANT } from '../../constants/routes';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import {Link} from 'react-router-dom';
 
 const styles = theme => ({
   titre: {
@@ -69,6 +72,9 @@ class MenuList extends Component {
     const { classes } = this.props;
     return (
       <div className="MenuList">
+        <IconButton component={Link} to={RESTAURANT + '/' + this.state.id}>
+          <ArrowBackIcon />
+        </IconButton>
         <Typography
           className={classes.titre}
           variant="h3"
