@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import DetailCommandeMenu from './DetailCommandeMenu';
 import { app, base } from '../../constants/base';
 import DetailCommandeCarte from './DetailCommandeCarte';
@@ -7,6 +8,47 @@ import Login from '../Login';
 import DetailCommandeRestaurant from './DetailCommandeRestaurant';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import Drawer from '@material-ui/core/Drawer';
+import IconButton from '@material-ui/core/IconButton';
+import Divider from '@material-ui/core/Divider';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import { withStyles } from '@material-ui/core/styles';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+
+const drawerWidth = 500;
+
+const styles = theme => ({
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+  },
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  drawerHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '0 8px',
+    ...theme.mixins.toolbar,
+    justifyContent: 'flex-start',
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing.unit * 3,
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginRight: -drawerWidth,
+  },
+  contentShift: {
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginRight: 0,
+  },
+});
 
 class Commande extends Component {
   constructor(props) {
@@ -81,7 +123,7 @@ class Commande extends Component {
 
   componentWillMount() {
     console.log("Will mount");
-    let date = new Date().toISOString().slice(0,10);
+    let date = new Date().toISOString().slice(0, 10);
     // this runs right before the <App> is rendered
     this.ref = base.syncState("restaurant", {
       context: this,
@@ -94,7 +136,7 @@ class Commande extends Component {
         } else {
           this.setState({ authentificated: true, user: user });
         }
-        this.ref = base.syncState("commande/" + user.uid+"/"+date, {
+        this.ref = base.syncState("commande/" + user.uid + "/" + date, {
           context: this,
           state: 'commande'
         });
@@ -113,9 +155,11 @@ class Commande extends Component {
   }
 
   render() {
+    const { classes, theme } = this.props;
+    const { open } = this.state;
     let restoDetail = {};
     let userCommande = Object.keys(this.state.commande).map((idresto) => {
-      if(this.state.restaurant){
+      if (this.state.restaurant) {
         restoDetail = this.state.restaurant[idresto];
       }
       let commande = this.state.commande[idresto];
@@ -138,25 +182,36 @@ class Commande extends Component {
     });
     return (
       <div className="App">
+        <div className={classes.drawerHeader}>
+          <IconButton onClick={this.props.handleDrawerClose}>
+            {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          </IconButton>
+          <h3>Liste de vos commandes aujourd'hui</h3>
+        </div>
+        <Divider />
         <div>
-          <h2>Liste de vos commandes aujourd'hui</h2>
           {userCommande}
         </div>
 
 
-        <Grid container spacing={24}>
-          <Grid item xs={4}></Grid>
-          <Grid item xs={8}>
-          {this.props.authentificated
-            ? <Button disabled={userCommande.length===0} size="small" onClick={() => this.handleClickSendCommande(this.props.item)}>
-              Confirmez vos commandes
-            </Button>
-            : <Button disabled={userCommande.length===0} size="small" onClick={() => this.handleClickOpenLogin()}>
-              Confirmez vos commandes
-            </Button>
-          }
+          <Grid container spacing={24}>
+            <Grid item xs={3}></Grid>        
+            {userCommande.length!=0
+              ? <Grid item xs={9}>
+                  {this.props.authentificated
+                    ? <Button disabled={userCommande.length === 0} size="small" onClick={() => this.handleClickSendCommande(this.props.item)}>
+                      Confirmez vos commandes
+                    </Button>
+                    : <Button disabled={userCommande.length === 0} size="small" onClick={() => this.handleClickOpenLogin()}>
+                      Confirmez vos commandes
+                      </Button>
+                  }
+                </Grid>
+              : <Grid item xs={9}>
+                  <Typography>Aucune commande n'a encore été faite</Typography>
+                </Grid>
+              }
           </Grid>
-        </Grid>
 
         <Login
           handleClose={this.handleCloseLogin.bind(this)}
@@ -171,5 +226,9 @@ class Commande extends Component {
 function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
+Commande.propTypes = {
+  classes: PropTypes.object.isRequired,
+  theme: PropTypes.object.isRequired,
+};
 
-export default Commande;
+export default withStyles(styles, { withTheme: true })(Commande);
