@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import CarteListItem from './CarteListItem';
 import { app, base } from '../../constants/base';
 import ModalCommandeCarte from './ModalCommandeCarte';
-import { Slide, Dialog, DialogContent } from '@material-ui/core';
+import { Slide, IconButton, List } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { RESTAURANT } from '../../constants/routes';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import {Link} from 'react-router-dom';
 
 function TabContainer(props) {
   return (
@@ -27,6 +29,9 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
+  },
+  titre: {
+    fontFamily: 'Allura'
   },
 });
 
@@ -55,12 +60,12 @@ class CarteList extends Component {
 
   componentWillMount() {
     this.removeAuthListener = app.auth().onAuthStateChanged((user) => {
-      if(user){
+      if (user) {
         this.setState({
           authentificated: true,
           loading: false
         })
-      }else{
+      } else {
         this.setState({
           authentificated: false,
           loading: true
@@ -78,7 +83,7 @@ class CarteList extends Component {
   }
 
   componentWillUnmount() {
-    this.removeAuthListener(); 
+    this.removeAuthListener();
     base.removeBinding(this.ref);
   }
 
@@ -95,14 +100,12 @@ class CarteList extends Component {
     let tabAutre = [];
     let carte = Object.keys(this.state.carte).map((key) => {
       let item = this.state.carte[key];
-      
       let comp = <CarteListItem
-        key={item._id}
-        id={this.state.id}
-        item={item}
-        authentificated = {this.state.authentificated}
-        handleClickOpenCommande={this.handleClickOpenCommande.bind(this)} />
-
+                    key={item._id}
+                    id={this.state.id}
+                    item={item}
+                    authentificated={this.state.authentificated}
+                    handleClickOpenCommande={this.handleClickOpenCommande.bind(this)} />
       switch (item.type) {
         case "Hors d'oeuvre":
           tabHorsDoeuvre.push(comp);
@@ -124,10 +127,19 @@ class CarteList extends Component {
     const { value } = this.state;
     return (
       <div className="CarteList">
-        <h1>Notre Carte</h1>
+        <IconButton component={Link} to={RESTAURANT + '/' + this.state.id}>
+          <ArrowBackIcon />
+        </IconButton>
+        <Typography
+          className={classes.titre}
+          variant="h3"
+          align="center"
+          gutterBottom>
+          La Carte
+        </Typography>
         <div className={classes.root}>
           <AppBar position="static">
-            <Tabs value={value} onChange={this.handleChange}>
+            <Tabs value={value} onChange={this.handleChange} centered>
               <Tab label="Tous" />
               <Tab label="Hors d'oeuvres" />
               <Tab label="Plats" />
@@ -135,11 +147,15 @@ class CarteList extends Component {
               <Tab label="Autres" />
             </Tabs>
           </AppBar>
-          {value === 0 && <TabContainer>{carte}</TabContainer>}
-          {value === 1 && <TabContainer>{tabHorsDoeuvre}</TabContainer>}
-          {value === 2 && <TabContainer>{tabPlat}</TabContainer>}
-          {value === 3 && <TabContainer>{tabDessert}</TabContainer>}
-          {value === 4 && <TabContainer>{tabAutre}</TabContainer>}
+          <TabContainer>
+            <List>
+          {value === 0 && carte}
+          {value === 1 && tabHorsDoeuvre}
+          {value === 2 && tabPlat}
+          {value === 3 && tabDessert}
+          {value === 4 && tabAutre}
+            </List>
+          </TabContainer>
         </div>
         <ModalCommandeCarte
           resto={this.state.id}

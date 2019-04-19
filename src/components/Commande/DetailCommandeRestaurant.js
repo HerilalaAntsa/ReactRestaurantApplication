@@ -1,8 +1,5 @@
 import React from 'react';
-import { Typography, Badge, IconButton } from '@material-ui/core';
-import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
-import RemoveShoppingCartIcon from '@material-ui/icons/RemoveShoppingCart';
-import DeleteIcon from '@material-ui/icons/Delete';
+import { Typography } from '@material-ui/core';
 import DetailCommandeCarte from './DetailCommandeCarte';
 import DetailCommandeMenu from './DetailCommandeMenu';
 
@@ -12,9 +9,10 @@ function DetailCommandeRestaurant(props) {
     var total = 0;
     let carte = Object.keys(commande['carte'] || {}).map((i)=>{
         let item = commande['carte'][i];
-        total += item.item.prix * item.qte;
+        let totalCarte =  item.item.prix * item.qte;
+        total += totalCarte;
         return <DetailCommandeCarte key={i}
-            totalCarte = {total}
+            total={totalCarte}
             index={i}
             commande={item}
             removeCommande={props.removeCommandeCarte.bind(props.caller, props._id, item, date)}
@@ -28,9 +26,10 @@ function DetailCommandeRestaurant(props) {
         let detail = Object.keys(item).map((j) => {
             let value = item[j];
             let combinaison = value.horsdoeuvre + value.plat + value.dessert;
-            total += item.item.prix * item.qte;
+            let totalMenu = item.item.prix * item.qte;
+            total += totalMenu;
             return <DetailCommandeMenu key={j}
-            totalMenu = {total}
+            total = {totalMenu}
             index={j}
             commande={value}
             removeCommande={props.removeCommandeMenu.bind(props.caller, props._id, value, combinaison, date)}

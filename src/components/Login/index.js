@@ -1,13 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom'
-import { app, base } from '../../constants/base';
-import {
-  DialogTitle, DialogContent,
-  DialogActions, Button,
-  Dialog, Typography, Paper,
-  InputLabel, Input
-} from '@material-ui/core';
+import { app } from '../../constants/base';
+import { DialogContent, DialogActions, Button, Dialog, Typography, Paper, InputLabel, Input } from '@material-ui/core';
 import Checkbox from '@material-ui/core/Checkbox';
 import Avatar from '@material-ui/core/Avatar';
 import CssBaseline from '@material-ui/core/CssBaseline';

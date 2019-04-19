@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { app, base } from '../../constants/base';
+import { app } from '../../constants/base';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Dialog, DialogContent } from '@material-ui/core';
 import { withSnackbar } from 'notistack';

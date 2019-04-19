@@ -1,16 +1,18 @@
 
 import React, { Component } from 'react';
-import { Stepper, Typography, Button, Step, StepButton } from '@material-ui/core';
+import { Stepper, Typography, Button, Step, StepButton, Grid } from '@material-ui/core';
 import StepperCommandeForm from './StepperCommandeForm';
 
-
-class HorizontalNonLinearStepper extends Component {
+class StepperCommande extends Component {
   constructor(props) {
     super(props);
     this.state = {
       activeStep: 0,
       menu: props.menu,
-      completed:{},
+      completed: {},
+      horsdoeuvre: "",
+      plat: "",
+      dessert: "",
     }
   }
   getSteps() {
@@ -24,21 +26,21 @@ class HorizontalNonLinearStepper extends Component {
           name="horsdoeuvre"
           label="Que prendriez-vous comme hors d'oeuvre ?"
           option={this.state.menu.horsdoeuvre}
-          handleRadioSelection = {this.handleRadioSelection.bind(this)} 
+          handleRadioSelection={this.handleRadioSelection.bind(this)}
           selected={this.state.horsdoeuvre} />;
       case 1:
         return <StepperCommandeForm
           name="plat"
           label="Que voudriez-vous comme plat ?"
           option={this.state.menu.plat}
-          handleRadioSelection = {this.handleRadioSelection.bind(this)}
+          handleRadioSelection={this.handleRadioSelection.bind(this)}
           selected={this.state.plat} />;
       case 2:
         return <StepperCommandeForm
           name="dessert"
           label="Pour finir, quel sera votre dessert ?"
           option={this.state.menu.dessert}
-          handleRadioSelection = {this.handleRadioSelection.bind(this)}
+          handleRadioSelection={this.handleRadioSelection.bind(this)}
           selected={this.state.dessert} />;
       default:
         return '&Eacute;tape inconnue';
@@ -49,15 +51,16 @@ class HorizontalNonLinearStepper extends Component {
     let activeStep;
 
     if (this.isLastStep() && !this.allStepsCompleted()) {
-      // It's the last step, but not all steps have been completed,
-      // find the first step that has been completed
       const steps = this.getSteps();
       activeStep = steps.findIndex((step, i) => !(i in this.state.completed));
     } else {
       activeStep = this.state.activeStep + 1;
     }
+    const { completed } = this.state;
+    completed[this.state.activeStep] = true;
     this.setState({
       activeStep,
+      completed,
     });
   }
 
@@ -76,20 +79,17 @@ class HorizontalNonLinearStepper extends Component {
     this.setState({
       activeStep: 0,
       completed: {},
-      horsdoeuvre: undefined,
-      plat: undefined,
-      dessert: undefined,
+      horsdoeuvre: "",
+      plat: "",
+      dessert: "",
     });
   }
   handleRadioSelection(e) {
     this.props.commandeState({
-      [e.target.name] : e.target.value,
+      [e.target.name]: e.target.value,
     });
-    const { completed } = this.state;
-    completed[this.state.activeStep] = true;
     this.setState({
-      [e.target.name] : e.target.value,
-      completed,
+      [e.target.name]: e.target.value,
     })
   }
   handleStep = step => () => {
@@ -97,7 +97,7 @@ class HorizontalNonLinearStepper extends Component {
       activeStep: step,
     });
   };
-  totalSteps(){
+  totalSteps() {
     return this.getSteps().length;
   }
   completedSteps() {
@@ -137,9 +137,11 @@ class HorizontalNonLinearStepper extends Component {
                 </Button>
             </div>
           ) : (
-              <div>
-                {this.getStepContent(activeStep)}
-                <div>
+              <Grid container spacing={16}>
+                <Grid item>
+                  {this.getStepContent(activeStep)}
+                </Grid>
+                <Grid item>
                   <Button
                     disabled={activeStep === 0}
                     onClick={this.handleBack.bind(this)}
@@ -153,12 +155,12 @@ class HorizontalNonLinearStepper extends Component {
                   >
                     Valider
                   </Button>
-                </div>
-              </div>
+                </Grid>
+              </Grid>
             )}
         </div>
       </div>
     );
   }
 }
-export default HorizontalNonLinearStepper
+export default StepperCommande

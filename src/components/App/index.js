@@ -6,6 +6,7 @@ import {
 import classNames from 'classnames';
 import Navigation from '../Navigation';
 import SignUpPage from '../SignUp';
+import Commande from '../Commande';
 import PasswordForgetPage from '../PasswordForget';
 import HomePage from '../Home';
 import AccountPage from '../Account';
@@ -17,24 +18,29 @@ import CarteList from '../Carte';
 import Login from '../Login';
 import Logout from '../Logout';
 import { Slide } from '@material-ui/core';
-
+import Admin from '../Admin';
 import * as ROUTES from '../../constants/routes';
-import Commande from '../Commande';
 import { SnackbarProvider } from 'notistack';
 import { Drawer, CssBaseline, withStyles } from '@material-ui/core';
 import { app, base } from '../../constants/base';
 import IconButton from '@material-ui/core/IconButton';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import {createMuiTheme, MuiThemeProvider } from '@material-ui/core';
+import 'typeface-allura';
+import { blueGrey } from '@material-ui/core/colors';
+import Utilisateur from '../Utilisateur';
 
 const drawerWidth = 500;
 
-const styles = theme => ({
-  root: {
-    display: 'flex',
-  },
-  appBar: {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginRight: drawerWidth,
+const secondary = {
+      light: '#626262',
+      main: '#424242',
+      dark: '#1b1b1b',
+      contrastText: '#fff',
+    };
+const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
   },
   appBarShift: {
     width: `calc(100% - ${drawerWidth}px)`,
@@ -82,12 +88,17 @@ const styles = theme => ({
     }),
     marginRight: 0,
   },
+  palette: {
+    primary: blueGrey,
+    secondary: secondary
+  },
 });
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      openCommande: true,
       openLogin: false,
       authentificated: false,
       openDrawer: false,
@@ -112,6 +123,7 @@ class App extends Component {
     const { classes, theme } = this.props;
     const { openDrawer } = this.state;
     return (
+      <MuiThemeProvider theme={theme}>
       <SnackbarProvider className="App" maxSnack={3}>
         <div className={classes.root}>
           <CssBaseline />
@@ -166,7 +178,12 @@ class App extends Component {
 
           </Drawer>
         </div>
+            <Router>
+                <Route path={'/'} component={Utilisateur} />
+                <Route path={ROUTES.ADMIN} exact component={Admin} />
+            </Router>
       </SnackbarProvider>
+      </MuiThemeProvider>
     );
   }
 }
@@ -175,4 +192,4 @@ function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
 
-export default withStyles(styles, { withTheme: true })(App);
+export default withStyles(theme, { withTheme: true })(App);

@@ -1,15 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Badge, IconButton } from '@material-ui/core';
-import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
-import RemoveShoppingCartIcon from '@material-ui/icons/RemoveShoppingCart';
-import DeleteIcon from '@material-ui/icons/Delete';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import Divider from '@material-ui/core/Divider';
-import Grid from '@material-ui/core/Grid';
 
 const styles = theme => ({
     card: {
@@ -38,7 +36,7 @@ const styles = theme => ({
 });
 
 function DetailCommandeCarte(props) {
-    const { classes, theme } = props;
+    const { classes } = props;
     return (
         <div index={props.index}>
             <Card className={classes.card}>
@@ -59,16 +57,16 @@ function DetailCommandeCarte(props) {
                             </Typography>
                     </CardContent>
                     <div className={classes.controls}>
-                        <Typography>total Ar {Intl.NumberFormat().format(props.totalCarte)}</Typography>
+                        <Typography>total Ar {Intl.NumberFormat().format(props.total)}</Typography>
                          
                         <IconButton onClick={props.addCommande} color="primary" aria-label="Rajouter">
-                            <AddShoppingCartIcon />
+                            <AddCircleOutlineIcon />
                         </IconButton>
                         <IconButton onClick={props.substractCommande} color="primary" aria-label="Retirer">
-                            <RemoveShoppingCartIcon />
+                            <RemoveCircleOutlineIcon />
                         </IconButton>
                         <IconButton onClick={props.removeCommande} aria-label="Delete" color="secondary">
-                            <DeleteIcon />
+                            <DeleteOutlineIcon />
                         </IconButton>
                     </div>
                 </div>
@@ -78,8 +76,7 @@ function DetailCommandeCarte(props) {
 }
 
 DetailCommandeCarte.propTypes = {
-    classes: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles, { withTheme: true })(DetailCommandeCarte);
+export default withStyles(styles)(DetailCommandeCarte);

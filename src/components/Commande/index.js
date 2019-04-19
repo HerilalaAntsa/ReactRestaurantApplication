@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import DetailCommandeMenu from './DetailCommandeMenu';
 import { app, base } from '../../constants/base';
-import DetailCommandeCarte from './DetailCommandeCarte';
-import { Slide, Typography } from '@material-ui/core';
+import { Slide } from '@material-ui/core';
 import Login from '../Login';
 import DetailCommandeRestaurant from './DetailCommandeRestaurant';
 import Button from '@material-ui/core/Button';
@@ -11,6 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
 import Divider from '@material-ui/core/Divider';
+import { Typography } from '@material-ui/core';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { withStyles } from '@material-ui/core/styles';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -95,7 +95,6 @@ class Commande extends Component {
   }
   addCommandeCarte(resto, commande, qte, date) {
     const copieCommande = { ...this.state.commande }; // spread operator permert de cloner des object
-    console.log(copieCommande)
     copieCommande[resto]['carte'][commande.item._id]['qte'] += qte;
     if (copieCommande[resto]['carte'][commande.item._id]['qte'] <= 0) {
       return this.removeCommandeCarte(resto, commande, date);
@@ -144,6 +143,10 @@ class Commande extends Component {
         this.setState({ authentificated: false, user: {} });
         base.removeBinding(this.ref);
       }
+    });
+    this.refResto = base.bindToState("restaurant", {
+      context: this,
+      state: 'restaurant'
     });
   }
 

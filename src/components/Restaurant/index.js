@@ -1,23 +1,43 @@
 import React, { Component } from 'react';
-import RestaurantDetail from './RestaurantItem';
-import {base} from '../../constants/base';
-import {Link} from 'react-router-dom';
-import * as ROUTES from '../../constants/routes';
+import RestaurantDetail from './RestaurantDetail';
+import { base } from '../../constants/base';
+import { Paper, Typography, withStyles } from '@material-ui/core';
+import RestaurantMap from '../RestaurantMap';
+import Leaflet from 'leaflet';
+import '../RestaurantMap/index.css';
+import 'leaflet/dist/leaflet.css';
+Leaflet.Icon.Default.imagePath = 'leaflet/dist/images/';
 
+const styles = theme => ({
+  titre: {
+    fontFamily: 'Allura'
+  },
+  main: {
+    padding: theme.spacing.unit,
+  }
+})
 class Restaurant extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
-      id:props.match.params.id,
-      restaurant: {}
+    this.state = {
+      id: props.match.params.id,
+      restaurant: {
+        position : {
+          lat: 0,
+          lng: 0
+        }
+      },
+      value: 0,
     }
   }
-
+  handleChange = (event, value) => {
+    this.setState({ value });
+  };
   componentWillMount() {
     console.log("Will mount")
     this.ref = base.syncState("restaurant/" + this.state.id, {
       context: this,
-      state: 'restaurant'
+      state: 'restaurant',
     });
   }
 
@@ -27,27 +47,19 @@ class Restaurant extends Component {
   }
 
   render() {
-    let restaurant = Object.keys(this.state.restaurant).map((property) => {
-      let item = this.state.restaurant[property];
-      return <RestaurantDetail
-        key={item._id + property}
-        titre={property}
-        value={item}>
-      </RestaurantDetail>
-    })
+    const { classes } = this.props;
     return (
       <div className="Restaurant">
         <div>
-          <h2>Restaurant {this.state.restaurant.nom}</h2>
-          <ul>
-            {restaurant}
-          </ul>
-          <Link to={ROUTES.MENURESTAURANT + '/' + this.state.restaurant._id}>Menu </Link>
-          <Link to={ROUTES.CARTERESTAURANT + '/' + this.state.restaurant._id}>Carte </Link>
+          <Paper className={classes.main}>
+            <Typography variant="h2" className={classes.titre} gutterBottom>Restaurant {this.state.restaurant.nom}</Typography>
+            <RestaurantDetail item={this.state.restaurant}/>
+            <RestaurantMap position={this.state.restaurant.position} nom={this.state.restaurant.nom}/>
+          </Paper>
         </div>
       </div>
     );
   }
 }
 
-export default Restaurant;
+export default withStyles(styles)(Restaurant);

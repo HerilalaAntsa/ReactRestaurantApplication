@@ -73,7 +73,10 @@ class ModalCommande extends Component {
     }
     copieCommande[currentUser][dateNow][this.props.resto]['menu'][this.props.menu._id][key] = newCommande;
     this.setState({
-      commande: copieCommande
+      commande: copieCommande,
+      horsdoeuvre: undefined,
+      plat: undefined,
+      dessert: undefined,
     });
     this.props.toggleLoading(false);
     this.props.handleClose();
@@ -86,11 +89,19 @@ class ModalCommande extends Component {
         },
       });
   }
+  handleClose() {
+    this.props.handleClose();
+    this.setState({
+      horsdoeuvre: undefined,
+      plat: undefined,
+      dessert: undefined,
+    })
+  }
   render() {
     return (
       <Dialog
         open={this.props.open}
-        onClose={this.props.handleClose}
+        onClose={this.handleClose.bind(this)}
         TransitionComponent={this.props.Transition}
         aria-labelledby="commande"
       >
@@ -103,12 +114,12 @@ class ModalCommande extends Component {
           <StepperCommande menu={this.props.menu} commandeState={this.setState.bind(this)} />
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.props.handleClose} color="primary">
+          <Button onClick={this.handleClose.bind(this)} color="primary">
             Annuler
-        </Button>
+          </Button>
           <Button disabled={this.commandeComplete()} onClick={this.addCommande.bind(this)} color="primary">
             Soumettre le menu
-        </Button>
+          </Button>
         </DialogActions>
       </Dialog>
     )
