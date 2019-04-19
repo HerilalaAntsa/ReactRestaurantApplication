@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import CarteListItem from './CarteListItem';
 import { app, base } from '../../constants/base';
-import ModalCommande from './ModalCommande';
+import ModalCommandeCarte from './ModalCommandeCarte';
 import { Slide, Dialog, DialogContent } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -46,43 +46,11 @@ class CarteList extends Component {
   handleChange = (event, value) => {
     this.setState({ value });
   };
-  handleClickOpenLogin(carte) {
-    this.setState({ openLogin: true, detail: carte });
-  }
   handleClickOpenCommande(carte) {
     this.setState({ openCommande: true, detail: carte });
   }
   handleCloseCommande() {
     this.setState({ openCommande: false });
-  }
-  handleCloseLogin() {
-    this.setState({ openLogin: false });
-  }
-  addCommande(item) {
-    const copieCommande = { ...this.state.commande }; // spread operator permert de cloner des object
-    if (copieCommande[this.state.id]) {
-      if (copieCommande[this.state.id]['carte'][item._id]) {
-        copieCommande[this.state.id]['carte'][item._id]['qte'] += 1;
-      }
-    } else {
-      copieCommande[this.state.id] = {
-        'menu': {},
-        'carte': {}
-      }
-      copieCommande[this.state.id]['carte'][item._id] = {
-        'qte': 1,
-        'prix': item.prix,
-        //  'horsdoeuvre': horsdoeuvre,
-        //  'plat': plat,
-        //  'dessert': dessert,
-        'item': item
-      }
-
-    }
-    this.setState({
-      commande: copieCommande
-    });
-    console.log("commande added" + this.state.commande);
   }
 
   componentWillMount() {
@@ -173,18 +141,14 @@ class CarteList extends Component {
           {value === 3 && <TabContainer>{tabDessert}</TabContainer>}
           {value === 4 && <TabContainer>{tabAutre}</TabContainer>}
         </div>
-        <ModalCommande
+        <ModalCommandeCarte
           resto={this.state.id}
           carte={this.state.detail}
           handleClose={this.handleCloseCommande.bind(this)}
           open={this.state.openCommande}
           toggleLoading={this.toggleLoading.bind(this)}
           Transition={Transition} />
-          <Dialog open={this.state.loading} onClose={() => { }} aria-labelledby="Chargement...">
-            <DialogContent>
-              <CircularProgress size={68} />
-            </DialogContent>
-          </Dialog>
+          
       </div>
     );
   }

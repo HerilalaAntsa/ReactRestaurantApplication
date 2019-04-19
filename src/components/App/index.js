@@ -16,11 +16,13 @@ import MenuList from '../Menu';
 import CarteList from '../Carte';
 import Login from '../Login';
 import Logout from '../Logout';
+import { Slide } from '@material-ui/core';
 
 import * as ROUTES from '../../constants/routes';
 import Commande from '../Commande';
 import { SnackbarProvider } from 'notistack';
 import { Drawer, CssBaseline, withStyles } from '@material-ui/core';
+import { app, base } from '../../constants/base';
 
 const drawerWidth = 240;
 
@@ -48,6 +50,21 @@ const styles = theme => ({
 });
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      openLogin: false,
+      authentificated: false
+    }
+  }
+  
+  handleClickOpenLogin() {
+    this.setState({ openLogin: true});
+  }
+  handleClickCloseLogin() {
+    this.setState({ openLogin: false});
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -62,7 +79,12 @@ class App extends Component {
             <hr />
 
             <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
-            <Route path={ROUTES.LOGIN} component={Login} />
+            <Route path={ROUTES.LOGIN} component={() => <Login
+                  handleClose={this.handleClickCloseLogin.bind(this)}
+                  open={true}
+                  Transition={Transition}
+                />} 
+            />
             <Route path={ROUTES.LOGOUT} component={Logout} />
             <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
             <Route path={ROUTES.HOME} component={HomePage} />
@@ -80,11 +102,19 @@ class App extends Component {
           variant="permanent"
           anchor="right"
         >
-          <Commande />
+          <Commande
+            handleClickOpenLogin= {this.handleClickOpenLogin}
+          />
+        
         </Drawer>
         </div>
       </SnackbarProvider>
     );
   }
 }
+
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
+
 export default withStyles(styles)(App);

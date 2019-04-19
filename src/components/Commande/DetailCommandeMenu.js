@@ -5,7 +5,7 @@ import RemoveShoppingCartIcon from '@material-ui/icons/RemoveShoppingCart';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 function DetailCommandeMenu(props) {
-    let total = props.commande.item.prix * props.commande.qte;
+    props.addTotal(props.commande.item.prix * props.commande.qte);
     return (
         <li index={props.index}>
             <Badge badgeContent={props.commande.qte} color="secondary">
@@ -26,7 +26,7 @@ function DetailCommandeMenu(props) {
                 <li>Dessert : {props.commande.item.dessert[props.commande.dessert].nom}</li>
             </ul>
             <Typography>Ar {Intl.NumberFormat().format(props.commande.item.prix)}</Typography>
-            <Typography>total Ar {Intl.NumberFormat().format(total)}</Typography>
+            <Typography>total Ar {Intl.NumberFormat().format(props.totalMenu)}</Typography>
         </li>
     )
 }

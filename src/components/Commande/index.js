@@ -1,131 +1,175 @@
 import React, { Component } from 'react';
 import DetailCommandeMenu from './DetailCommandeMenu';
-import { base } from '../../constants/base';
+import { app, base } from '../../constants/base';
 import DetailCommandeCarte from './DetailCommandeCarte';
-import { Typography } from '@material-ui/core';
+import { Slide, Typography } from '@material-ui/core';
+import Login from '../Login';
+import DetailCommandeRestaurant from './DetailCommandeRestaurant';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 
 class Commande extends Component {
   constructor(props) {
     super(props);
-    this.state = { commande: {} }
+    this.state = {
+      commande: {},
+      openLogin: false,
+      authentificated: false,
+      user: {},
+    }
+    this.total = 0;
+    this.totalCarte = 0;
+    this.totalMenu = 0;
   }
-  removeCommandeCarte(resto, commande) {
+  setTotalCarte(value) {
+    this.totalCarte = value
+  }
+  setTotalMenu(value) {
+    this.totalMenu = value
+  }
+
+  getTotal() {
+    return this.totalCarte + this.totalMenu;
+  }
+  handleClickOpenLogin() {
+    this.setState({ openLogin: true });
+  }
+  handleCloseLogin() {
+    this.setState({ openLogin: false });
+  }
+  removeCommandeCarte(resto, commande, date) {
     const copieCommande = { ...this.state.commande }; // spread operator permert de cloner des object
     copieCommande[resto]['carte'][commande.item._id] = null;
     this.setState({
       commande: copieCommande
     })
   }
-  removeCommandeMenu(resto, commande, combinaison) {
+  removeCommandeMenu(resto, commande, combinaison, date) {
     const copieCommande = { ...this.state.commande }; // spread operator permert de cloner des object
-    copieCommande[resto]['menu'][commande.item._id][combinaison] = null;
+    copieCommande[date[resto]]['menu'][commande.item._id][combinaison] = null;
     this.setState({
       commande: copieCommande
     })
   }
-  addCommandeCarte(resto, commande, qte) {
+  addCommandeCarte(resto, commande, qte, date) {
     const copieCommande = { ...this.state.commande }; // spread operator permert de cloner des object
+    console.log(copieCommande)
     copieCommande[resto]['carte'][commande.item._id]['qte'] += qte;
     if (copieCommande[resto]['carte'][commande.item._id]['qte'] <= 0) {
-      return this.removeCommandeCarte(resto, commande);
+      return this.removeCommandeCarte(resto, commande, date);
     }
     this.setState({
       commande: copieCommande
     })
-
   }
-  addCommandeMenu(resto, commande, combinaison, qte) {
+
+  addCommandeMenu(resto, commande, combinaison, qte, date) {
     const copieCommande = { ...this.state.commande }; // spread operator permert de cloner des object
     copieCommande[resto]['menu'][commande.item._id][combinaison]['qte'] += qte;
     if (copieCommande[resto]['menu'][commande.item._id][combinaison]['qte'] <= 0) {
-      return this.removeCommandeMenu(resto, commande, combinaison);
+      return this.removeCommandeMenu(resto, commande, combinaison, date);
     } else
       this.setState({
         commande: copieCommande
       })
   }
+
+  handleClickSendCommande(date, resto) {
+    const copieCommande = { ...this.state.commande };
+    copieCommande[resto]["isConfirmed"] = true;
+  }
+
   componentWillMount() {
-    console.log("Will mount")
+    console.log("Will mount");
+    let date = new Date().toISOString().slice(0,10);
     // this runs right before the <App> is rendered
-    this.ref = base.syncState("commande", {
+    this.ref = base.syncState("restaurant", {
       context: this,
-      state: 'commande'
+      state: 'restaurant'
+    });
+    app.auth().onAuthStateChanged(user => {
+      if (user) {
+        if (user.isAnonymous) {
+          this.setState({ authentificated: false, user: user });
+        } else {
+          this.setState({ authentificated: true, user: user });
+        }
+        this.ref = base.syncState("commande/" + user.uid+"/"+date, {
+          context: this,
+          state: 'commande'
+        });
+      } else {
+        this.setState({ authentificated: false, user: {} });
+        base.removeBinding(this.ref);
+      }
     });
   }
 
   componentWillUnmount() {
     console.log("Will unmount");
-    base.removeBinding(this.ref);
+    if (this.ref) {
+      base.removeBinding(this.ref);
+    }
   }
 
   render() {
-    let total = 0;
-    let listcommande = Object.keys(this.state.commande).map((key) => {
-      let restaurant = this.state.commande[key];
-      let categorie = Object.keys(restaurant).map((cat) => {
-        let detailCommande = [];
-        switch (cat) {
-          case 'menu': detailCommande = Object.keys(restaurant[cat]).map((i) => {
-            let item = restaurant[cat][i];
-            let detail = Object.keys(item).map((j) => {
-              let value = item[j];
-              let combinaison = value.horsdoeuvre + value.plat + value.dessert;
-              total += value.item.prix * value.qte;
-              return <DetailCommandeMenu key={j}
-                index={j}
-                commande={value}
-                removeCommande={this.removeCommandeMenu.bind(this, key, value, combinaison)}
-                addCommande={this.addCommandeMenu.bind(this, key, value, combinaison, 1)}
-                substractCommande={this.addCommandeMenu.bind(this, key, value, combinaison, -1)} />
-            })
-            return <ul key={i}>
-              {detail}
-            </ul>
-          }); break;
-          case 'carte': detailCommande = Object.keys(restaurant[cat]).map((i) => {
-            let item = restaurant[cat][i];
-            total += item.item.prix * item.qte;
-            return <DetailCommandeCarte key={i}
-              index={i}
-              commande={item}
-              removeCommande={this.removeCommandeCarte.bind(this, key, item)}
-              addCommande={this.addCommandeCarte.bind(this, key, item, 1)}
-              substractCommande={this.addCommandeCarte.bind(this, key, item, -1)} />
-          }); break;
-          default: ;
-        }
-        return <li key={cat}>
-          <span style={{ textTransform: 'capitalize' }}>{cat}</span>
-          <ul>
-            {detailCommande}
-          </ul>
-        </li>
-      })
-      return <li key={key}>
-        {key}
-        <ul>
-          {categorie}
-        </ul>
-      </li>
-    })
+    let restoDetail = {};
+    let userCommande = Object.keys(this.state.commande).map((idresto) => {
+      if(this.state.restaurant){
+        restoDetail = this.state.restaurant[idresto];
+      }
+      let commande = this.state.commande[idresto];
+      return <DetailCommandeRestaurant
+        key={idresto}
+        _id={idresto}
+        nomResto={restoDetail["nom"]}
+        item={commande}
+        addCommandeCarte={this.addCommandeCarte}
+        addCommandeMenu={this.addCommandeMenu}
+        removeCommandeMenu={this.removeCommandeMenu}
+        removeCommandeCarte={this.removeCommandeCarte}
+        caller={this}
+        getTotal={this.getTotal.bind(this)}
+        setTotalCarte={this.setTotalCarte.bind(this)}
+        setTotalMenu={this.setTotalMenu.bind(this)}
+        totalCarte={this.totalCarte}
+        totalMenu={this.totalMenu}
+      />
+    });
     return (
       <div className="App">
         <div>
-          <h2>Liste des commande</h2>
-          Nombre de commande : {listcommande.length}
-          <ul>
-            {listcommande}
-          </ul>
-          <Typography>Total Ar {Intl.NumberFormat().format(total)}</Typography>
+          <h2>Liste de vos commandes aujourd'hui</h2>
+          {userCommande}
         </div>
+
+
+        <Grid container spacing={24}>
+          <Grid item xs={4}></Grid>
+          <Grid item xs={8}>
+          {this.props.authentificated
+            ? <Button disabled={userCommande.length===0} size="small" onClick={() => this.handleClickSendCommande(this.props.item)}>
+              Confirmez vos commandes
+            </Button>
+            : <Button disabled={userCommande.length===0} size="small" onClick={() => this.handleClickOpenLogin()}>
+              Confirmez vos commandes
+            </Button>
+          }
+          </Grid>
+        </Grid>
 
         <Login
           handleClose={this.handleCloseLogin.bind(this)}
           open={this.state.openLogin}
-          Transition={Transition} />
+          Transition={Transition}
+        />
       </div>
     )
   }
+}
+
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
 }
 
 export default Commande;
