@@ -70,7 +70,7 @@ class ModalNew extends Component {
   saveCarte() {
     this.props.toggleLoading(true);
     let uuid = uuidv4();
-    const copieCarte = { ...this.state.commande }; // spread operator permert de cloner des object
+    const copieCarte = { ...this.state.carte }; // spread operator permert de cloner des object
     copieCarte[this.props.resto] = copieCarte[this.props.resto] || {};
     copieCarte[this.props.resto][uuid] = copieCarte[this.props.resto][uuid] || {};
     let newCarte = {

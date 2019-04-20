@@ -4,6 +4,7 @@ import { DialogTitle, DialogContent, DialogActions, Button, Typography, FormCont
 import StepperNew from './StepperNew';
 import { app, base } from '../../constants/base';
 import { withSnackbar } from 'notistack';
+const uuidv4 = require('uuid/v4');
 
 const styles = theme => ({
   margin: {
@@ -63,31 +64,42 @@ class ModalNew extends Component {
   }
   saveNew() {
     this.props.toggleLoading(true);
+    let uuid = uuidv4();
     const copieMenu = { ...this.state.menu }; // spread operator permert de cloner des object
-    copieMenu[this.props.resto] = copieMenu[this.props.resto] || { 'menu': {}, 'carte': {} };
-    copieMenu[this.props.resto]['menu'] = copieMenu[this.props.resto]['menu'] || {};
-    copieMenu[this.props.resto]['isConfirmed'] = false;
-    copieMenu[this.props.resto]['menu'][this.props.menu._id] = copieMenu[this.props.resto]['menu'][this.props.menu._id] || {};
-    let key = this.state.horsdoeuvre + this.state.plat + this.state.dessert;
-    copieMenu[this.props.resto]['menu'][this.props.menu._id][key] = copieMenu[this.props.resto]['menu'][this.props.menu._id][key] || {};
-    let qte = copieMenu[this.props.resto]['menu'][this.props.menu._id][key]['qte'] || 0;
-    let newNew = {
-      'nom': qte + 1,
-      'horsdoeuvre': this.state.horsdoeuvre,
-      'plat': this.state.plat,
-      'dessert': this.state.dessert,
-      'prix': this.props.menu
+    let horsdoeuvre = {};
+    this.state.horsdoeuvre.map((value) => {
+      horsdoeuvre[value._id] = value;
+      return null;
+    })
+    let plat = {};
+    this.state.plat.map((value) => {
+      plat[value._id] = value;
+      return null;
+    })
+    let dessert = {};
+    this.state.dessert.map((value) => {
+      dessert[value._id] = value;
+      return null;
+    })
+    copieMenu[uuid] = {
+      '_id': uuid,
+      'nom': this.state.nom,
+      'horsdoeuvre': horsdoeuvre,
+      'plat': plat,
+      'dessert': dessert,
+      'prix': this.state.prix
     }
-    copieMenu[this.props.resto]['menu'][this.props.menu._id][key] = newNew;
     this.setState({
       menu: copieMenu,
       horsdoeuvre: undefined,
       plat: undefined,
       dessert: undefined,
+      prix: 0,
+      nom: '',
     });
     this.props.toggleLoading(false);
     this.props.handleClose();
-    this.props.enqueueSnackbar("Le menu \" " + this.props.menu.nom + " \" a été correctement ajouté à la menu",
+    this.props.enqueueSnackbar("Le menu \" " + copieMenu[uuid]['nom'] + " \" a été correctement ajouté",
       {
         variant: 'default',
         anchorOrigin: {
