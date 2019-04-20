@@ -46,3 +46,4 @@ Toutes les fonctionnalités  dites précédemment sont disponibles, SAUF QUE les
 https://material-ui.com <br>
 https://firebase.google.com/docs/auth/web/start <br>
 https://www.robinwieruch.de/complete-firebase-authentication-react-tutorial/ <br>
+https://github.com/JedWatson/react-select <br>
