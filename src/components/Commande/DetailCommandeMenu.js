@@ -5,7 +5,6 @@ import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 
 function DetailCommandeMenu(props) {
-    props.addTotal(props.commande.item.prix * props.commande.qte);
     return (
         <li index={props.index}>
             <Badge badgeContent={props.commande.qte} color="secondary">

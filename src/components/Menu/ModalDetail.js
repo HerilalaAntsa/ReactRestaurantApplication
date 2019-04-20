@@ -7,6 +7,7 @@ import background from '../../img/preview.jpg';
 
 const styles = theme => ({
   root: {
+    backgroundColor: '#0d0908',
     backgroundSize: 'cover',
     backgroundImage: 'url(' + background + ')',
     backgroundRepeat: 'no-repeat',
@@ -67,7 +68,7 @@ function ModalDetail(props) {
         </Toolbar>
         <List>
           <ListItem>
-            <Grid container direction="row" wrap="nowrap" spacing={24} alignItems="stretch">
+            <Grid container direction="row" wrap="nowrap" spacing={24} alignItems="stretch" justify="space-between">
               <Grid item xs={4}>
                 <Paper elevation={3} className={classes.paper}>
                   <Typography
