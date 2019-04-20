@@ -2,17 +2,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom'
 import { app } from '../../constants/base';
-import { DialogContent, DialogActions, Button, Dialog, Typography, Paper, InputLabel, Input } from '@material-ui/core';
-import Checkbox from '@material-ui/core/Checkbox';
+import { DialogContent, DialogActions, Button, Dialog, Paper, InputLabel, Input, AppBar, Tabs, Tab, IconButton, InputAdornment } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { withSnackbar } from 'notistack';
 import firebase from 'firebase';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import withStyles from '@material-ui/core/styles/withStyles';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
 const styles = theme => ({
   main: {
@@ -51,18 +51,24 @@ class Login extends Component {
     this.state = {
       redirect: false,
       loading: false,
-      emailInput: '',
-      passwordInput: ''
+      showPassword: false,
+      email: '',
+      password: '',
+      username: '',
+      confirmPassword: '',
+      value: 0,
     }
   }
-  _handleEmailChange(event) {
+  handleChange = (event, value) => {
+    this.setState({ value });
+  };
+  handleClickShowPassword = () => {
+    const { showPassword } = this.state;
+    this.setState({ showPassword: !showPassword });
+  };
+  handleChangeInput(event) {
     this.setState({
-      emailInput: event.target.value
-    });
-  }
-  _handlePasswordChange(event) {
-    this.setState({
-      passwordInput: event.target.value
+      [event.target.name]: event.target.value
     });
   }
   toggleLoading(newloading) {
@@ -72,45 +78,24 @@ class Login extends Component {
   }
 
   signUpWithEmailPassword() {
-    const email = this.state.emailInput;
-    const password = this.state.passwordInput;
+    const email = this.state.email;
+    const password = this.state.password;
 
-    app.auth().fetchProvidersForEmail(email)
-      .then((providers) => {
-        if (providers.length === 0) {
-          // creation utilisateur
-          this.props.handleClose();
-          this.toggleLoading(true);
-          app.auth().createUserWithEmailAndPassword(email, password);
-
-          this.props.enqueueSnackbar("Nouvel utilisateur créé",
-            {
-              variant: 'default',
-              anchorOrigin: {
-                vertical: 'top',
-                horizontal: 'center',
-              },
-            });
-          this.toggleLoading(false);
-        } else if (providers.indexOf("password") === -1) {
-          // facebook par exemple
-          this.LoginForm.reset();
-        }
-      })
-      .then((user) => {
-        if (user && user.email) {
-          this.LoginForm.reset();
-          this.setState({ redirect: true })
-
-          this.props.enqueueSnackbar("Vous êtes déjà connecté",
-            {
-              variant: 'default',
-              anchorOrigin: {
-                vertical: 'top',
-                horizontal: 'center',
-              },
-            });
-        }
+    // creation utilisateur
+    this.props.handleClose();
+    this.toggleLoading(true);
+    app.auth().createUserWithEmailAndPassword(email, password)
+      .then((cred) => {
+        this.props.enqueueSnackbar(
+          "Votre compte a été correctement créé avec l'adresse :" + cred.user.email,
+          {
+            variant: 'default',
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'center',
+            },
+          });
+        this.toggleLoading(false);
       })
       .catch((error) => {
         this.props.enqueueSnackbar(error.message,
@@ -121,65 +106,29 @@ class Login extends Component {
               horizontal: 'center',
             },
           });
-      })
+        this.toggleLoading(false);
+      });
   }
 
   signInWithEmailPassword() {
-    const email = this.state.emailInput;
-    const password = this.state.passwordInput;
+    const email = this.state.email;
+    const password = this.state.password;
 
-    app.auth().fetchProvidersForEmail(email)
-      .then((providers) => {
-        if (providers.length === 0) {
-
-        } else if (providers.indexOf("password") === -1) {
-          // facebook par exemple
-          this.LoginForm.reset();
-        } else {
-          // Login
-          this.props.handleClose();
-          this.toggleLoading(true);
-          app.auth().signInWithEmailAndPassword(email, password)
-          .then((user) => {
-            this.props.enqueueSnackbar("Connexion avec succès",
-              {
-                variant: 'default',
-                anchorOrigin: {
-                  vertical: 'top',
-                  horizontal: 'center',
-                },
-              });
-            this.toggleLoading(false);
-          }).catch((error) => {
-            this.props.enqueueSnackbar("Error: " + error.message,
-              {
-                variant: 'default',
-                anchorOrigin: {
-                  vertical: 'top',
-                  horizontal: 'center',
-                },
-              });
-              this.toggleLoading(false);
-          })
-        }
-
-      })
+    // Login
+    this.toggleLoading(true);
+    app.auth().signInWithEmailAndPassword(email, password)
       .then((user) => {
-        if (user && user.email) {
-          this.LoginForm.reset();
-          this.setState({ redirect: true })
-
-          this.props.enqueueSnackbar("Vous êtes déjà connecté",
-            {
-              variant: 'default',
-              anchorOrigin: {
-                vertical: 'top',
-                horizontal: 'center',
-              },
-            });
-        }
-      })
-      .catch((error) => {
+        this.props.enqueueSnackbar("Connexion avec succès",
+          {
+            variant: 'default',
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'center',
+            },
+          });
+        this.toggleLoading(false);
+        this.props.handleClose();
+      }).catch((error) => {
         this.props.enqueueSnackbar("Error: " + error.message,
           {
             variant: 'default',
@@ -188,6 +137,7 @@ class Login extends Component {
               horizontal: 'center',
             },
           });
+        this.toggleLoading(false);
       })
   }
 
@@ -226,7 +176,62 @@ class Login extends Component {
         });
     });
   }
-
+  getButton(value) {
+    const { classes } = this.props;
+    switch (value) {
+      case 0:
+        return app.auth().currentUser
+          ? <Button disabled={this.state.redirect}
+            onClick={this.authAnonymousToPermanent.bind(this)}
+            color="primary"
+            fullWidth
+            variant="contained"
+            className={classes.submit}>
+            Se connecter
+          </Button>
+          : <Button disabled={this.state.redirect}
+            onClick={this.signInWithEmailPassword.bind(this)}
+            color="primary"
+            fullWidth
+            variant="contained"
+            className={classes.submit}>
+            Se connecter
+          </Button>
+      case 1:
+        return <Button disabled={this.state.redirect}
+          onClick={this.signUpWithEmailPassword.bind(this)}
+          color="primary"
+          fullWidth
+          variant="contained"
+          className={classes.submit}>
+          S'inscrire
+      </Button>
+      default: return null;
+    }
+  }
+  getInput(value) {
+    switch (value) {
+      case 1: return (
+        <div>
+          <FormControl margin="normal" required fullWidth>
+            <InputLabel htmlFor="confirmPassword">Confirmer votre mot de passe</InputLabel>
+            <Input name="confirmPassword" type="password"
+              value={this.state.confirmPassword}
+              onChange={this.handleChangeInput.bind(this)}
+              placeholder="Mot de passe" autoComplete="current-password" />
+          </FormControl>
+          <FormControl margin="normal" required fullWidth>
+            <InputLabel htmlFor="username">Identifiant</InputLabel>
+            <Input autoComplete="username" name="username"
+              value={this.state.username}
+              onChange={this.handleChangeInput.bind(this)}
+              placeholder="Identifiant" autoFocus />
+          </FormControl>
+        </div>
+      )
+      default: return null;
+    }
+  }
   render() {
     const { classes } = this.props;
     if (this.state.redirect === true) {
@@ -247,31 +252,43 @@ class Login extends Component {
                 <Avatar className={classes.avatar}>
                   <LockOutlinedIcon />
                 </Avatar>
-                <Typography component="h1" variant="h5">
-                  Veuillez vous connecter
-                </Typography>
+                <AppBar position="static">
+                  <Tabs value={this.state.value} onChange={this.handleChange} variant="fullWidth">
+                    <Tab label="Connexion" />
+                    <Tab label="Inscription" />
+                  </Tabs>
+                </AppBar>
                 <div>
                   <form className={classes.form}
-                    onSubmit={(event) => { this.authWithEmailPassword(event) }}
                     ref={(form) => { this.LoginForm = form }}>
+
                     <FormControl margin="normal" required fullWidth>
                       <InputLabel htmlFor="email">Adresse Email</InputLabel>
                       <Input autoComplete="email" name="email" type="email"
                         value={this.state.emailInput}
-                        onChange={this._handleEmailChange.bind(this)}
+                        onChange={this.handleChangeInput.bind(this)}
                         placeholder="Email" autoFocus />
                     </FormControl>
                     <FormControl margin="normal" required fullWidth>
                       <InputLabel htmlFor="password">Mot de passe</InputLabel>
-                      <Input name="password" type="password"
-                        value={this.state.passwordInput}
-                        onChange={this._handlePasswordChange.bind(this)}
-                        placeholder="Mot de passe" autoComplete="current-password" />
+                      <Input
+                        name="password"
+                        type={this.state.showPassword ? 'text' : 'password'}
+                        value={this.state.password}
+                        onChange={this.handleChangeInput.bind(this)}
+                        endAdornment={
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="Toggle password visibility"
+                              onClick={this.handleClickShowPassword.bind(this)}
+                            >
+                              {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
+                            </IconButton>
+                          </InputAdornment>
+                        }
+                      />
                     </FormControl>
-                    <FormControlLabel
-                      control={<Checkbox value="remember" color="primary" />}
-                      label="Se souvenir de moi"
-                    />
+                    {this.getInput(this.state.value)}
                   </form>
                 </div>
               </DialogContent>
@@ -279,37 +296,10 @@ class Login extends Component {
                 <Button onClick={this.props.handleClose}
                   color="primary"
                   fullWidth
-                  variant="contained"
                   className={classes.submit}>
                   Annuler
-        </Button>
-                <Button disabled={this.state.redirect}
-                  onClick={this.signUpWithEmailPassword.bind(this)}
-                  color="primary"
-                  fullWidth
-                  variant="contained"
-                  className={classes.submit}>
-                  S'inscrire
-        </Button>
-
-                {app.auth().currentUser
-                  ? <Button disabled={this.state.redirect}
-                    onClick={this.authAnonymousToPermanent.bind(this)}
-                    color="primary"
-                    fullWidth
-                    variant="contained"
-                    className={classes.submit}>
-                    Se connecter
-           </Button>
-                  : <Button disabled={this.state.redirect}
-                    onClick={this.signInWithEmailPassword.bind(this)}
-                    color="primary"
-                    fullWidth
-                    variant="contained"
-                    className={classes.submit}>
-                    Se connecter
-          </Button>
-                }
+                </Button>
+                {this.getButton(this.state.value)}
 
               </DialogActions>
             </Dialog>

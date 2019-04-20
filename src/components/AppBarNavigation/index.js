@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
 import { Button, Toolbar, AppBar, Grid } from '@material-ui/core';
 
@@ -16,12 +16,11 @@ function AppBarNavigation(props) {
             alignItems="center"
           >
             <Button onClick={()=>{props.openLogin()}} color="inherit">Log in</Button>
-            <Button color="inherit" component={RouterLink} to={ROUTES.LOGOUT}>Log out</Button>
-            <Button color="inherit" component={RouterLink} to={ROUTES.ACCUEIL}>
+            <Button color="inherit" component={Link} to={ROUTES.LOGOUT}>Log out</Button>
+            <Button color="inherit" component={Link} to={ROUTES.ACCUEIL}>
               Accueil
             </Button>
-            <Button color="inherit" component={RouterLink} to={ROUTES.ACCOUNT}>Account</Button>
-            <Button color="inherit" component={RouterLink} to={ROUTES.ADMIN}>Admin</Button>
+            <Button color="inherit" component={Link} to={ROUTES.ADMIN} replace>Administrateur</Button>
           </Grid>
         </Toolbar>
       </AppBar>

@@ -115,6 +115,7 @@ class ModalCommande extends Component {
         onClose={this.handleClose.bind(this)}
         TransitionComponent={this.props.Transition}
         aria-labelledby="commande"
+        scroll="body"
       >
         <DialogTitle id="commande">Commander "{this.props.menu.nom}"
         <Typography>

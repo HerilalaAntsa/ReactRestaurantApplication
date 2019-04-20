@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import CarteListItem from './CarteListItem';
 import { app, base } from '../../constants/base';
 import ModalCommandeCarte from './ModalCommandeCarte';
-import { Slide, IconButton, List } from '@material-ui/core';
+import { Slide, IconButton, List, Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -127,16 +127,22 @@ class CarteList extends Component {
     const { value } = this.state;
     return (
       <div className="CarteList">
-        <IconButton component={Link} to={RESTAURANT + '/' + this.state.id}>
-          <ArrowBackIcon />
-        </IconButton>
-        <Typography
-          className={classes.titre}
-          variant="h3"
-          align="center"
-          gutterBottom>
-          La Carte
-        </Typography>
+        <Grid container justify="space-between">
+          <Grid item>
+            <IconButton component={Link} to={RESTAURANT + '/' + this.state.id}>
+              <ArrowBackIcon />
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <Typography
+              className={classes.titre}
+              variant="h3"
+              align="center"
+              gutterBottom>
+              La Carte
+            </Typography>
+          </Grid>
+        </Grid>
         <div className={classes.root}>
           <AppBar position="static">
             <Tabs value={value} onChange={this.handleChange} centered>
