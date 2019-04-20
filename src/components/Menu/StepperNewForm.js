@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { emphasize } from '@material-ui/core/styles/colorManipulator';
-import { FormControl, FormLabel, Grid, withStyles, Paper, Chip, TextField, Typography, MenuItem, Avatar, ListItemAvatar, ListItemText } from "@material-ui/core";
+import { FormLabel, Grid, withStyles, Paper, Chip, TextField, Typography, MenuItem, Avatar, ListItemAvatar, ListItemText } from "@material-ui/core";
 import classNames from 'classnames';
 import CancelIcon from '@material-ui/icons/Cancel';
 import Select from 'react-select';
@@ -160,17 +160,24 @@ class StepperNewForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selected: null,
+            horsdoeuvre: null,
+            plat: null,
+            dessert: null,
         }
     }
     handleChange(value) {
+        delete value.prix;
         this.setState({
-            selected: value,
+            [this.props.name]: value,
         });
+        this.props.menuState({
+            [this.props.name]:value,
+        })
     };
 
     render() {
         const { classes, theme } = this.props;
+        const value = this.state[this.props.name];
         const selectStyles = {
             input: base => ({
                 ...base,
@@ -187,6 +194,7 @@ class StepperNewForm extends Component {
                     </Grid>
                     <Grid item>
                         <Select
+                            name={this.props.name}
                             classes={classes}
                             styles={selectStyles}
                             textFieldProps={{
@@ -196,10 +204,11 @@ class StepperNewForm extends Component {
                             }}
                             options={this.props.suggestion}
                             components={components}
-                            value={this.state.selected}
+                            value={value}
                             onChange={this.handleChange.bind(this)}
                             placeholder={"Sélectionnez les " + this.props.type}
                             isMulti
+                            getOptionValue={(option) => (option['_id'])}
                         />
                     </Grid>
                 </Grid>

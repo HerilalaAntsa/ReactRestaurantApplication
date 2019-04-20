@@ -17,6 +17,11 @@ class ModalNew extends Component {
       user: {},
       menu: {},
       carte: {},
+      nom: '',
+      prix: 0,
+      horsdoeuvre: [],
+      plat:[],
+      dessert:[],
     }
   }
   componentWillMount() {
@@ -54,35 +59,18 @@ class ModalNew extends Component {
     )
   }
   addNew() {
-    var user = app.auth().currentUser;
-    if (user) {
-      this.saveNew();
-    } else {
-      app.auth().signInAnonymously()
-        .then((cred) => {
-          //Est appelé avant le listener on authstatechanged
-          var dateNow = new Date().toISOString().slice(0, 10);
-          this.ref = base.syncState("menu/" + cred.user.uid + '/' + dateNow, {
-            context: this,
-            state: 'menu',
-          })
-          this.saveNew();
-        })
-        .catch((error) => {
-          console.log(error.message)
-        })
-    }
+    this.saveNew();
   }
   saveNew() {
     this.props.toggleLoading(true);
-    const copieNew = { ...this.state.menu }; // spread operator permert de cloner des object
-    copieNew[this.props.resto] = copieNew[this.props.resto] || { 'menu': {}, 'carte': {} };
-    copieNew[this.props.resto]['menu'] = copieNew[this.props.resto]['menu'] || {};
-    copieNew[this.props.resto]['isConfirmed'] = false;
-    copieNew[this.props.resto]['menu'][this.props.menu._id] = copieNew[this.props.resto]['menu'][this.props.menu._id] || {};
+    const copieMenu = { ...this.state.menu }; // spread operator permert de cloner des object
+    copieMenu[this.props.resto] = copieMenu[this.props.resto] || { 'menu': {}, 'carte': {} };
+    copieMenu[this.props.resto]['menu'] = copieMenu[this.props.resto]['menu'] || {};
+    copieMenu[this.props.resto]['isConfirmed'] = false;
+    copieMenu[this.props.resto]['menu'][this.props.menu._id] = copieMenu[this.props.resto]['menu'][this.props.menu._id] || {};
     let key = this.state.horsdoeuvre + this.state.plat + this.state.dessert;
-    copieNew[this.props.resto]['menu'][this.props.menu._id][key] = copieNew[this.props.resto]['menu'][this.props.menu._id][key] || {};
-    let qte = copieNew[this.props.resto]['menu'][this.props.menu._id][key]['qte'] || 0;
+    copieMenu[this.props.resto]['menu'][this.props.menu._id][key] = copieMenu[this.props.resto]['menu'][this.props.menu._id][key] || {};
+    let qte = copieMenu[this.props.resto]['menu'][this.props.menu._id][key]['qte'] || 0;
     let newNew = {
       'nom': qte + 1,
       'horsdoeuvre': this.state.horsdoeuvre,
@@ -90,9 +78,9 @@ class ModalNew extends Component {
       'dessert': this.state.dessert,
       'prix': this.props.menu
     }
-    copieNew[this.props.resto]['menu'][this.props.menu._id][key] = newNew;
+    copieMenu[this.props.resto]['menu'][this.props.menu._id][key] = newNew;
     this.setState({
-      menu: copieNew,
+      menu: copieMenu,
       horsdoeuvre: undefined,
       plat: undefined,
       dessert: undefined,
