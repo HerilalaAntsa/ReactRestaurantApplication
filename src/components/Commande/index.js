@@ -199,23 +199,24 @@ class Commande extends Component {
           {userCommande}
         </div>
 
-
-          <Grid container spacing={24}>
-            <Grid item xs={3}></Grid>        
+          <Divider />
+          <Grid container spacing={24}>   
+          <Grid item xs={4}></Grid>
             {userCommande.length!==0
-              ? <Grid item xs={9}>
+              ? <Grid item xs={8}>
                   {this.props.authentificated
-                    ? <Button disabled={userCommande.length === 0} size="small" onClick={() => this.handleClickSendCommande(this.props.item)}>
-                      Confirmez vos commandes
-                    </Button>
-                    : <Button disabled={userCommande.length === 0} size="small" onClick={() => this.handleClickOpenLogin()}>
-                      Confirmez vos commandes
+                  ? <Typography>Vos commandes sont désormais considérées.</Typography>
+                  : <div> 
+                      <Button color="primary" disabled={userCommande.length === 0} size="small" onClick={() => this.handleClickOpenLogin()}>
+                        Se connecter
                       </Button>
+                      <Typography variant="caption  ">Pour que vos commandes soit considérées, veuillez vous connecter</Typography>
+                    </div>
                   }
                 </Grid>
-              : <Grid item xs={9}>
-                  <Typography>Aucune commande n'a encore été faite</Typography>
-                </Grid>
+              :   <Grid item xs={8}>
+                    <Typography>Aucune commande n'a encore été faite</Typography>
+                  </Grid>
               }
           </Grid>
 
