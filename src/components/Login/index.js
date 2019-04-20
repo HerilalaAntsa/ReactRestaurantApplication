@@ -265,7 +265,7 @@ class Login extends Component {
                 </div>
               </DialogContent>
               <DialogActions>
-                <Button onClick={this.props.handleClose.bind(this)}
+                <Button onClick={this.props.handleClose}
                   color="primary"
                   fullWidth
                   variant="contained"

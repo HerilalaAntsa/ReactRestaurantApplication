@@ -93,17 +93,12 @@ class App extends Component {
               })}>
               <Router>
                 <div>
-                  <AppBarNavigation />
+                  <AppBarNavigation openLogin={this.handleClickOpenLogin.bind(this)} />
   
                   <hr />
   
                   <Route path={[ROUTES.ACCUEIL, '/']} exact component={RestaurantList} />
                   <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
-                <Route path={ROUTES.LOGIN} component={() => <Login
-                  handleClose={this.handleClickCloseLogin.bind(this)}
-                  open={true}
-                  Transition={Transition}
-                />} />
                   <Route path={ROUTES.LOGOUT} component={Logout} />
                   <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
                   <Route path={ROUTES.ACCOUNT} component={AccountPage} />
@@ -134,6 +129,11 @@ class App extends Component {
             <Fab onClick={this.handleDrawerOpen.bind(this)} color="secondary" aria-label="Add" className={classes.fab}>
               <ShoppingCartOutlinedIcon />
             </Fab>
+            <Login
+                    handleClose={this.handleClickCloseLogin.bind(this)}
+                    open={this.state.openLogin}
+                    Transition={Transition}
+                  />
         </div>
       );
     }

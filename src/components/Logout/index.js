@@ -22,9 +22,32 @@ class Logout extends Component {
   componentWillMount() {
     this.toggleLoading(true);
     app.auth().signOut().then((user) => {
-      this.setState({ redirect: false });
-
-      this.props.enqueueSnackbar("Déconnecté",
+      if(user){
+        this.setState({ redirect: false });
+  
+        this.props.enqueueSnackbar("Déconnecté",
+          {
+            variant: 'default',
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'center',
+            },
+          });
+        this.toggleLoading(false);
+      }else{
+        this.props.enqueueSnackbar("Aucun utilisateur connecté",
+          {
+            variant: 'default',
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'center',
+            },
+          });
+        this.toggleLoading(false);
+      }
+    })
+    .catch((error) => {
+      this.props.enqueueSnackbar(error.message,
         {
           variant: 'default',
           anchorOrigin: {
@@ -33,7 +56,7 @@ class Logout extends Component {
           },
         });
       this.toggleLoading(false);
-    })
+    });
   }
 
   render() {
