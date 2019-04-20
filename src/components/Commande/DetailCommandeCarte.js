@@ -7,7 +7,6 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 
 const styles = theme => ({
     card: {

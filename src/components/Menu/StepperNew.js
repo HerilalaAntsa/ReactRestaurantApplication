@@ -24,17 +24,20 @@ class StepperNew extends Component {
         return <StepperNewForm
           suggestion={this.props.horsdoeuvre}
           name="horsdoeuvre"
+          type="Hors d'oeuvre"
           label="Que choisiriez-vous comme hors d'oeuvre ?"
           handleRadioSelection={this.handleRadioSelection.bind(this)} />;
       case 1:
         return <StepperNewForm
           suggestion={this.props.plat}
+          type="Plats"
           name="plat"
           label="Que voudriez-vous comme plat ?"
           handleRadioSelection={this.handleRadioSelection.bind(this)} />;
       case 2:
         return <StepperNewForm
           suggestion={this.props.dessert}
+          type="Desserts"
           name="dessert"
           label="Pour finir, quel sera les desserts ?"
           handleRadioSelection={this.handleRadioSelection.bind(this)}
@@ -134,7 +137,7 @@ class StepperNew extends Component {
                 </Button>
             </div>
           ) : (
-              <Grid container spacing={16}>
+              <Grid container spacing={16} direction="column">
                 <Grid item>
                   {this.getStepContent(activeStep)}
                 </Grid>

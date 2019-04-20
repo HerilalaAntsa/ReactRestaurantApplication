@@ -38,7 +38,7 @@ class ModalNew extends Component {
       }
     });
   }
-  handleChange(event){
+  handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   };
   componentWillUnmount() {
@@ -117,7 +117,7 @@ class ModalNew extends Component {
     })
   }
   render() {
-    const {classes} = this.props;
+    const { classes } = this.props;
     let tabHorsDoeuvre = [];
     let tabPlat = [];
     let tabDessert = [];
@@ -136,6 +136,7 @@ class ModalNew extends Component {
         default:
           break;
       }
+      return null;
     });
     return (
       <Dialog
@@ -146,28 +147,27 @@ class ModalNew extends Component {
         scroll="body"
       >
         <DialogTitle id="menu">
-          <Typography variant="h5">
+          <Typography variant="h5" component="span">
             Ajouter un nouveau menu
           </Typography>
         </DialogTitle>
-        <DialogContent>          
-            <FormControl className={classes.margin} margin="normal" required>
-              <InputLabel htmlFor="nom">Nom</InputLabel>
-              <Input name="nom"
-                value={this.state.nom}
-                onChange={this.handleChange.bind(this)}
-                placeholder="Nom" autoFocus
-                margin="normal" />
-            </FormControl>
-            <FormControl className={classes.margin} margin="normal" required>
-              <InputLabel htmlFor="prix">Prix</InputLabel>
-              <Input name="prix"
-                value={this.state.prix}
-                onChange={this.handleChange.bind(this)}
-                endAdornment={<InputAdornment position="end">Ariary</InputAdornment>}
-                placeholder="Prix"/>
-            </FormControl>
-          <StepperNew 
+        <DialogContent>
+          <FormControl fullWidth className={classes.margin} margin="normal" required>
+            <InputLabel htmlFor="nom">Nom</InputLabel>
+            <Input name="nom"
+              value={this.state.nom}
+              onChange={this.handleChange.bind(this)}
+              placeholder="Nom" autoFocus />
+          </FormControl>
+          <FormControl fullWidth className={classes.margin} margin="normal" required>
+            <InputLabel htmlFor="prix">Prix</InputLabel>
+            <Input name="prix"
+              value={this.state.prix}
+              onChange={this.handleChange.bind(this)}
+              endAdornment={<InputAdornment position="end">Ariary</InputAdornment>}
+              placeholder="Prix" />
+          </FormControl>
+          <StepperNew
             horsdoeuvre={tabHorsDoeuvre}
             plat={tabPlat}
             dessert={tabDessert}
