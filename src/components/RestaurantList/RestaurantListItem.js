@@ -23,7 +23,7 @@ function RestaurantListItem(props) {
                             to={RESTAURANT + '/' + props.item._id} >
                     <CardMedia
                         className={classes.media}
-                        image="http://calgarypma.ca/wp-content/uploads/2018/01/default-thumbnail.jpg"
+                        image={props.item.photo}
                         title={props.item.nom}
                     />
                     <CardContent>
