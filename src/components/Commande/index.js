@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import DetailCommandeMenu from './DetailCommandeMenu';
 import { app, base } from '../../constants/base';
 import { Slide } from '@material-ui/core';
 import Login from '../Login';
 import DetailCommandeRestaurant from './DetailCommandeRestaurant';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
 import Divider from '@material-ui/core/Divider';
 import { Typography } from '@material-ui/core';
@@ -159,7 +157,6 @@ class Commande extends Component {
 
   render() {
     const { classes, theme } = this.props;
-    const { open } = this.state;
     let restoDetail = {};
     let userCommande = Object.keys(this.state.commande).map((idresto) => {
       if (this.state.restaurant) {
@@ -199,7 +196,7 @@ class Commande extends Component {
 
           <Grid container spacing={24}>
             <Grid item xs={3}></Grid>        
-            {userCommande.length!=0
+            {userCommande.length!==0
               ? <Grid item xs={9}>
                   {this.props.authentificated
                     ? <Button disabled={userCommande.length === 0} size="small" onClick={() => this.handleClickSendCommande(this.props.item)}>

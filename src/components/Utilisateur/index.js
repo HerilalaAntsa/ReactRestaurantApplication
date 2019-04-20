@@ -18,7 +18,7 @@ import Logout from '../Logout';
 
 import * as ROUTES from '../../constants/routes';
 import Commande from '../Commande';
-import { Drawer, CssBaseline, withStyles, IconButton, Divider, Fab } from '@material-ui/core';
+import { Drawer, CssBaseline, withStyles, IconButton, Divider, Fab, Slide } from '@material-ui/core';
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import classNames from 'classnames';
@@ -65,6 +65,7 @@ class App extends Component {
       super(props);
       this.state = {
         openCommande: true,
+        openLogin: false,
       };
     }
     handleDrawerOpen() {
@@ -74,13 +75,18 @@ class App extends Component {
     handleDrawerClose() {
       this.setState({ openCommande: false });
     };
+    handleClickOpenLogin() {
+      this.setState({ openLogin: true });
+    }
+    handleClickCloseLogin() {
+      this.setState({ openLogin: false });
+    }
   
     render() {
       const { classes } = this.props;
       return (
         <div className="Utilisateur">
           <div className={classes.root}>
-            <CssBaseline />
             <main
               className={classNames(classes.content, {
                 [classes.contentShift]: this.state.openCommande,
@@ -93,7 +99,11 @@ class App extends Component {
   
                   <Route path={[ROUTES.ACCUEIL, '/']} exact component={RestaurantList} />
                   <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
-                  <Route path={ROUTES.LOGIN} component={Login} />
+                <Route path={ROUTES.LOGIN} component={() => <Login
+                  handleClose={this.handleClickCloseLogin.bind(this)}
+                  open={true}
+                  Transition={Transition}
+                />} />
                   <Route path={ROUTES.LOGOUT} component={Logout} />
                   <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
                   <Route path={ROUTES.ACCOUNT} component={AccountPage} />
@@ -116,13 +126,9 @@ class App extends Component {
                 paper: classes.drawerPaper,
               }}
             >
-              <div className={classes.drawerHeader}>
-                <IconButton onClick={this.handleDrawerClose.bind(this)}>
-                  {<ChevronRightIcon />}
-                </IconButton>
-              </div>
               <Divider />
-              <Commande />
+              <Commande
+                handleDrawerClose={this.handleDrawerClose.bind(this)} />
             </Drawer>
           </div>
             <Fab onClick={this.handleDrawerOpen.bind(this)} color="secondary" aria-label="Add" className={classes.fab}>
@@ -131,5 +137,8 @@ class App extends Component {
         </div>
       );
     }
+  }
+  function Transition(props) {
+    return <Slide direction="up" {...props} />;
   }
   export default withStyles(styles)(App);
