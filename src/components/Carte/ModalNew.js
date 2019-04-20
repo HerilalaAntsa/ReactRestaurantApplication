@@ -3,6 +3,7 @@ import Dialog from '@material-ui/core/Dialog';
 import { DialogTitle, DialogContent, DialogActions, Button, Typography, InputLabel, FormControl, MenuItem, Select, withStyles, Input, InputAdornment } from '@material-ui/core';
 import { app, base } from '../../constants/base';
 import { withSnackbar } from 'notistack';
+const uuidv4 = require('uuid/v4');
 
 const styles = theme => ({
   textField: {
@@ -25,6 +26,11 @@ class ModalNew extends Component {
     this.state = {
       commande: {},
       user: {},
+      nom: {},
+      description: "",
+      prix: "",
+      photo: "",
+      type: "",
     }
   }
   handleChange(event){
@@ -33,10 +39,9 @@ class ModalNew extends Component {
   componentWillMount() {
     app.auth().onAuthStateChanged(user => {
       if (user) {
-        var dateNow = new Date().toISOString().slice(0, 10);
-        this.ref = base.syncState("commande/" + user.uid + '/' + dateNow, {
+        this.ref = base.syncState("carte", {
           context: this,
-          state: 'commande'
+          state: 'carte'
         })
         this.setState({
           user: user,
@@ -55,47 +60,35 @@ class ModalNew extends Component {
       base.removeBinding(this.ref);
     }
   }
-  addCommande() {
+  addCarte() {
     var user = app.auth().currentUser;
     if (user) {
-      this.saveCommande();
-    } else {
-      app.auth().signInAnonymously()
-        .then((cred) => {
-          //Est appelé avant le listener on authstatechanged
-          var dateNow = new Date().toISOString().slice(0, 10);
-          this.ref = base.syncState("commande/" + cred.user.uid + '/' + dateNow, {
-            context: this,
-            state: 'commande',
-          })
-          this.saveCommande();
-        })
-        .catch((error) => {
-          console.log(error.message)
-        })
-    }
+      this.saveCarte();
+    } 
   }
 
-  saveCommande() {
+  saveCarte() {
     this.props.toggleLoading(true);
-    const copieCommande = { ...this.state.commande }; // spread operator permert de cloner des object
-    copieCommande[this.props.resto] = copieCommande[this.props.resto] || { 'menu': {}, 'carte': {} };
-    copieCommande[this.props.resto]['carte'] = copieCommande[this.props.resto]['carte'] || {};
-    copieCommande[this.props.resto]['isConfirmed'] = false;
-    copieCommande[this.props.resto]['carte'][this.props.carte._id] = copieCommande[this.props.resto]['carte'][this.props.carte._id] || {};
-    let qte = copieCommande[this.props.resto]['carte'][this.props.carte._id]['qte'] || 0;
-    let newCommande = {
-      'qte': qte + 1,
-      'item': this.props.carte
+    let uuid = uuidv4();
+    const copieCarte = { ...this.state.commande }; // spread operator permert de cloner des object
+    copieCarte[this.props.resto] = copieCarte[this.props.resto] || {};
+    copieCarte[this.props.resto][uuid] = copieCarte[this.props.resto][uuid] || {};
+    let newCarte = {
+      '_id': uuid,
+      'description': this.state.description,
+      'nom': this.state.nom,
+      'photo': this.state.photo || "https://firebasestorage.googleapis.com/v0/b/exo-restaurant.appspot.com/o/default-thumbnail.jpg?alt=media&token=9c55ab62-39a5-4c7d-93d3-a96f26b8cf7e",
+      'prix': this.state.prix,
+      'type': this.state.type,
     }
-    copieCommande[this.props.resto]['carte'][this.props.carte._id] = newCommande;
-    console.log(copieCommande)
+    console.log(copieCarte)
+    copieCarte[this.props.resto][uuid]  = newCarte;
     this.setState({
-      commande: copieCommande
+      carte: copieCarte
     });
     this.props.toggleLoading(false);
     this.props.handleClose();
-    this.props.enqueueSnackbar("Un(e) \" " + this.props.carte.nom + " \" a été correctement ajouté(e) à la commande",
+    this.props.enqueueSnackbar("Un(e) \" " + this.state.nom + " \" a été correctement ajouté(e)",
       {
         variant: 'default',
         anchorOrigin: {
@@ -116,7 +109,7 @@ class ModalNew extends Component {
         scroll="body"
       >
         <DialogTitle id="commande">
-          <Typography variant="h5">
+          <Typography variant="h5" component="span">
             Ajouter un nouveau plat à la carte
           </Typography>
         </DialogTitle>
@@ -181,7 +174,7 @@ class ModalNew extends Component {
           <Button onClick={this.props.handleClose} color="primary">
             Annuler
         </Button>
-          <Button color="primary">
+          <Button color="primary" onClick={this.addCarte.bind(this)}>
             Ajouter à la carte
         </Button>
         </DialogActions>
