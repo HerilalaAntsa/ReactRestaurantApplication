@@ -1,72 +1,48 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Finding resto est une application qui consiste à :
+- rechercher des restaurants
+- voir les détails d'un restaurant
+- commander des plats ou des menus d'un restaurant
+- gérer un restaurant (gérer les commandes, cartes ou menus)
+developpé avec React JS, Material UI et Firebase
 
-## Available Scripts
+## Installation
 
-In the project directory, you can run:
+L'application est accessible sur Heroku via le lien: http://findingresto-mbds.herokuapp.com/
+
+Sinon, lancez l'application localement:
+
+### `npm install`
+
+Lancez 'npm install' afin d'installer tous les modules nécessaires<br>
+Après l'installation lancez:
 
 ### `npm start`
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Ouvrez [http://localhost:3000](http://localhost:3000) pour la voir sur le navigateur.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+## Fonctionnalités implémentées
 
-### `npm test`
+### Restaurant
+- Liste des restaurants
+- Recherche d'un restaurants
+- Détails d'un restaurant :
+    - Description (+ Localisation)
+    - Voir carte et menu
+### Commande
+- Passer commande (menu ou carte)
+- Voir commande (modifiable: ajouter, réduire, supprimer)
+### Authentification
+- Login, Sign In et Log Out
+- Mode Admin, Mode utilisateur et mode visiteur (anonymous)  <br>
+NB: les nouveaux utilisateurs seront inscrits en "mode utilisateur" par défaut. Des comptes admin seront déjà créés dans la base de donnée que vous utiliseriez pour voir le "mode admin".
+#### Mode Admin (authentifié)
+Toutes les fonctionnalités sont disponibles + boutons qui pourront gérer les restaurants, carte et menu.
+#### Mode Utilisateur (authentifié)
+Toutes les fonctionnalités  dites précédemment sont disponibles
+#### Mode Visiteur (anonymous: non authentifié)
+Toutes les fonctionnalités  dites précédemment sont disponibles, SAUF QUE les commandes faites en mode visiteur ne seront pas considérés
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
-
-### Tutoriaux et exemples du web
-
-Google map : https://medium.com/@marinamcgrath/getting-started-with-the-google-maps-api-1641ab0b4163
+### Bibliographie
+https://material-ui.com <br>
+https://firebase.google.com/docs/auth/web/start <br>
+https://www.robinwieruch.de/complete-firebase-authentication-react-tutorial/ <br>
