@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  Switch,
   BrowserRouter as Router,
   Route,
 } from 'react-router-dom';
@@ -41,10 +42,12 @@ class App extends Component {
       <MuiThemeProvider theme={theme}>
       <SnackbarProvider className="App" maxSnack={3}>
           <CssBaseline />
-            <Router>
-              <Route path={'/'} component={Utilisateur} />
-              <Route path={ROUTES.ADMIN} exact component={Admin} />
-            </Router>
+          <Router>
+            <Switch>
+              <Route path={ROUTES.ADMIN} component={Admin} />
+              <Route component={Utilisateur} />
+            </Switch>
+          </Router>
       </SnackbarProvider>
       </MuiThemeProvider>
     );

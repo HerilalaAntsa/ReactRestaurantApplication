@@ -72,16 +72,22 @@ class MenuList extends Component {
     const { classes } = this.props;
     return (
       <div className="MenuList">
-        <IconButton component={Link} to={RESTAURANT + '/' + this.state.id}>
-          <ArrowBackIcon />
-        </IconButton>
-        <Typography
-          className={classes.titre}
-          variant="h3"
-          align="center"
-          gutterBottom>
-          Les Menus Proposés
-        </Typography>
+        <Grid container justify="space-between">
+          <Grid item>
+            <IconButton component={Link} to={RESTAURANT + '/' + this.state.id}>
+              <ArrowBackIcon />
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <Typography
+              className={classes.titre}
+              variant="h3"
+              align="center"
+              gutterBottom>
+              Les Menus Proposés
+            </Typography>
+          </Grid>
+        </Grid>
         <Grid container spacing={24} justify="center" alignItems="center">
           {menu}
         </Grid>
