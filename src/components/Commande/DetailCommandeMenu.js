@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Badge, IconButton } from '@material-ui/core';
+import { Typography, Badge, IconButton, Tooltip } from '@material-ui/core';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
@@ -10,15 +10,21 @@ function DetailCommandeMenu(props) {
             <Badge badgeContent={props.commande.qte} color="secondary">
                 <Typography>{props.commande.item.nom}</Typography>
             </Badge>
-            <IconButton onClick={props.removeCommande} aria-label="Delete">
-                <DeleteOutlineIcon />
-            </IconButton>
-            <IconButton onClick={props.addCommande} color="primary" aria-label="Rajouter">
-                <AddCircleOutlineIcon />
-            </IconButton>
-            <IconButton onClick={props.substractCommande} color="primary" aria-label="Retirer">
-                <RemoveCircleOutlineIcon />
-            </IconButton>
+            <Tooltip title="Ajouter la quantité">
+                <IconButton onClick={props.addCommande} color="primary" aria-label="Rajouter">
+                    <AddCircleOutlineIcon />
+                </IconButton>
+            </Tooltip>
+            <Tooltip title="Réduire la quantité">
+                <IconButton onClick={props.substractCommande} color="primary" aria-label="Retirer">
+                    <RemoveCircleOutlineIcon />
+                </IconButton>
+            </Tooltip>
+            <Tooltip title="Retirer le menu">
+                <IconButton onClick={props.removeCommande} aria-label="Delete">
+                    <DeleteOutlineIcon />
+                </IconButton>
+            </Tooltip>
             <ul>
                 <li>Hors d'oeuvre : {props.commande.item.horsdoeuvre[props.commande.horsdoeuvre].nom}</li>
                 <li>Plat : {props.commande.item.plat[props.commande.plat].nom}</li>

@@ -20,7 +20,6 @@ function AppBarNavigation(props) {
             <Button color="inherit" component={Link} to={ROUTES.ACCUEIL}>
               Accueil
             </Button>
-            <Button color="inherit" component={Link} to={ROUTES.ADMIN} replace>Administrateur</Button>
           </Grid>
         </Toolbar>
       </AppBar>

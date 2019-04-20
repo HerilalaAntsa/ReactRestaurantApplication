@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import CarteListItem from './CarteListItem';
 import { app, base } from '../../constants/base';
 import ModalCommandeCarte from './ModalCommandeCarte';
-import { Slide, IconButton, List, Grid } from '@material-ui/core';
+import { Slide, IconButton, List, Grid, Fab, Dialog, CircularProgress, DialogContent } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -11,7 +11,9 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import { RESTAURANT } from '../../constants/routes';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import AddIcon from '@material-ui/icons/Add';
 import {Link} from 'react-router-dom';
+import ModalNew from './ModalNew';
 
 function TabContainer(props) {
   return (
@@ -43,6 +45,7 @@ class CarteList extends Component {
       carte: {}, categorie: {},
       openCommande: false,
       openLogin: false,
+      openNew: false,
       detail: {},
       value: 0,
       loading: false,
@@ -57,18 +60,22 @@ class CarteList extends Component {
   handleCloseCommande() {
     this.setState({ openCommande: false });
   }
+  handleClickOpenNew() {
+    this.setState({ openNew: true });
+  }
+  handleCloseNew() {
+    this.setState({ openNew: false });
+  }
 
   componentWillMount() {
     this.removeAuthListener = app.auth().onAuthStateChanged((user) => {
       if (user) {
         this.setState({
           authentificated: true,
-          loading: false
         })
       } else {
         this.setState({
           authentificated: false,
-          loading: true
         })
       }
     })
@@ -142,6 +149,12 @@ class CarteList extends Component {
               La Carte
             </Typography>
           </Grid>
+          <Grid item>
+            <Fab onClick={this.handleClickOpenNew.bind(this)} color="secondary" variant="extended" aria-label="Delete" className={classes.fab}>
+              <AddIcon className={classes.extendedIcon} />
+              Ajouter un plat à la carte
+            </Fab>
+          </Grid>
         </Grid>
         <div className={classes.root}>
           <AppBar position="static">
@@ -170,7 +183,17 @@ class CarteList extends Component {
           open={this.state.openCommande}
           toggleLoading={this.toggleLoading.bind(this)}
           Transition={Transition} />
-          
+        <ModalNew
+          resto={this.state.id}
+          handleClose={this.handleCloseNew.bind(this)}
+          open={this.state.openNew}
+          toggleLoading={this.toggleLoading.bind(this)}
+          Transition={Transition} />
+        <Dialog open={this.state.loading} onClose={() => { this.toggleLoading(false) }} aria-labelledby="Chargement...">
+          <DialogContent>
+            <CircularProgress size={68} />
+          </DialogContent>
+        </Dialog>
       </div>
     );
   }

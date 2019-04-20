@@ -8,7 +8,6 @@ import AppBarNavigation from '../AppBarNavigation';
 import SignUpPage from '../SignUp';
 import PasswordForgetPage from '../PasswordForget';
 import AccountPage from '../Account';
-import Admin from '../Admin';
 import RestaurantList from '../RestaurantList';
 import Restaurant from '../Restaurant';
 import MenuList from '../Menu';
@@ -101,7 +100,6 @@ class App extends Component {
                   <Route path={ROUTES.LOGOUT} component={Logout} />
                   <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
                   <Route path={ROUTES.ACCOUNT} component={AccountPage} />
-                  <Route path={ROUTES.ADMIN} component={Admin} />
                   <Route path={ROUTES.RESTAURANT + '/:id'} component={Restaurant} />
                   <Route path={ROUTES.MENURESTAURANT + '/:id'} component={MenuList} />
                   <Route path={ROUTES.CARTERESTAURANT + '/:id'} component={CarteList} />

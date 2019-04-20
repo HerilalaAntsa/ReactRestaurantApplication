@@ -4,8 +4,6 @@ import {
   BrowserRouter as Router,
   Route,
 } from 'react-router-dom';
-import Admin from '../Admin';
-import * as ROUTES from '../../constants/routes';
 import { SnackbarProvider } from 'notistack';
 import { CssBaseline } from '@material-ui/core';
 import {createMuiTheme, MuiThemeProvider } from '@material-ui/core';
@@ -44,7 +42,6 @@ class App extends Component {
           <CssBaseline />
           <Router>
             <Switch>
-              <Route path={ROUTES.ADMIN} component={Admin} />
               <Route component={Utilisateur} />
             </Switch>
           </Router>

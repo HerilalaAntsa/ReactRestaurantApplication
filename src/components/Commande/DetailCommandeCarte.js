@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Badge, IconButton } from '@material-ui/core';
+import { Typography, Badge, IconButton, Tooltip } from '@material-ui/core';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
@@ -11,11 +11,11 @@ import CardMedia from '@material-ui/core/CardMedia';
 
 const styles = theme => ({
     card: {
-      display: 'flex',
+        display: 'flex',
     },
     details: {
-      display: 'flex',
-      flexDirection: 'column',
+        display: 'flex',
+        flexDirection: 'column',
     },
     content: {
         flex: '1 0 auto',
@@ -52,22 +52,27 @@ function DetailCommandeCarte(props) {
                                 {props.commande.item.nom}
                             </Typography><br />
                         </Badge>
-                            <Typography variant="subtitle1" color="textSecondary">
-                                {props.commande.item.type} - Ar {Intl.NumberFormat().format(props.commande.item.prix)}
-                            </Typography>
+                        <Typography variant="subtitle1" color="textSecondary">
+                            {props.commande.item.type} - Ar {Intl.NumberFormat().format(props.commande.item.prix)}
+                        </Typography>
                     </CardContent>
                     <div className={classes.controls}>
                         <Typography>total Ar {Intl.NumberFormat().format(props.total)}</Typography>
-                         
-                        <IconButton onClick={props.addCommande} color="primary" aria-label="Rajouter">
-                            <AddCircleOutlineIcon />
-                        </IconButton>
-                        <IconButton onClick={props.substractCommande} color="primary" aria-label="Retirer">
-                            <RemoveCircleOutlineIcon />
-                        </IconButton>
-                        <IconButton onClick={props.removeCommande} aria-label="Delete" color="secondary">
-                            <DeleteOutlineIcon />
-                        </IconButton>
+                        <Tooltip title={"Rajouter la quantité de " + props.commande.item.nom}>
+                            <IconButton onClick={props.addCommande} color="primary" aria-label="Rajouter">
+                                <AddCircleOutlineIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title={"Réduire la quantité de " + props.commande.item.nom}>
+                            <IconButton onClick={props.substractCommande} color="primary" aria-label="Retirer">
+                                <RemoveCircleOutlineIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Retirer ">
+                            <IconButton onClick={props.removeCommande} aria-label="Delete" color="secondary">
+                                <DeleteOutlineIcon />
+                            </IconButton>
+                        </Tooltip>
                     </div>
                 </div>
             </Card>

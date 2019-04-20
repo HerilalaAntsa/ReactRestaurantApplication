@@ -2,15 +2,23 @@ import React, { Component } from 'react';
 import MenuListItem from './MenuListItem';
 import ModalDetail from './ModalDetail';
 import ModalCommande from './ModalCommande';
-import { Slide, CircularProgress, Dialog, DialogContent, Grid, Typography, withStyles, IconButton } from '@material-ui/core';
+import { Slide, CircularProgress, Dialog, DialogContent, Grid, Typography, withStyles, IconButton, Fab } from '@material-ui/core';
 import { base } from '../../constants/base';
 import { RESTAURANT } from '../../constants/routes';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import AddIcon from '@material-ui/icons/Add';
 import {Link} from 'react-router-dom';
+import ModalNew from './ModalNew';
 
 const styles = theme => ({
   titre: {
     fontFamily: 'Allura'
+  },
+  fab: {
+    margin: theme.spacing.unit,
+  },
+  extendedIcon: {
+    marginRight: theme.spacing.unit,
   },
 });
 
@@ -22,6 +30,7 @@ class MenuList extends Component {
       menu: {},
       openDetail: false,
       openCommande: false,
+      openNew: false,
       detail: {},
       loading: false,
     }
@@ -37,6 +46,12 @@ class MenuList extends Component {
   }
   handleCloseDetail() {
     this.setState({ openDetail: false });
+  }
+  handleClickOpenNew() {
+    this.setState({ openNew: true });
+  }
+  handleCloseNew() {
+    this.setState({ openNew: false });
   }
   toggleLoading(newloading) {
     this.setState({
@@ -87,6 +102,12 @@ class MenuList extends Component {
               Les Menus Proposés
             </Typography>
           </Grid>
+          <Grid item>
+            <Fab onClick={this.handleClickOpenNew.bind(this)} color="secondary" variant="extended" aria-label="Delete" className={classes.fab}>
+              <AddIcon className={classes.extendedIcon} />
+              Ajouter un menu
+            </Fab>
+          </Grid>
         </Grid>
         <Grid container spacing={24} justify="center" alignItems="center">
           {menu}
@@ -103,7 +124,13 @@ class MenuList extends Component {
           open={this.state.openCommande}
           toggleLoading={this.toggleLoading.bind(this)}
           Transition={Transition} />
-        <Dialog open={this.state.loading} onClose={() => { }} aria-labelledby="Chargement...">
+          <ModalNew
+            resto={this.state.id}
+            handleClose={this.handleCloseNew.bind(this)}
+            open={this.state.openNew}
+            toggleLoading={this.toggleLoading.bind(this)}
+            Transition={Transition} />
+        <Dialog open={this.state.loading} onClose={() => { this.toggleLoading(false) }} aria-labelledby="Chargement...">
           <DialogContent>
             <CircularProgress size={68} />
           </DialogContent>
