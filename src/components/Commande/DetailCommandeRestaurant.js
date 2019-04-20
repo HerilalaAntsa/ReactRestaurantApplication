@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography } from '@material-ui/core';
+import { Typography, Chip, Avatar } from '@material-ui/core';
 import DetailCommandeCarte from './DetailCommandeCarte';
 import DetailCommandeMenu from './DetailCommandeMenu';
 
@@ -43,9 +43,7 @@ function DetailCommandeRestaurant(props) {
     });
     return (
         <div>
-            <ul>
-                <li key={props._id}>
-                    Restaurant : {props.nomResto}
+            <Typography variant="h6" gutterBottom align="center">Restaurant {props.nomResto}</Typography>
                     <br/>
                     <span>Carte</span>
                         {carte}
@@ -53,9 +51,17 @@ function DetailCommandeRestaurant(props) {
                     <ul>
                         {menu}
                     </ul>
-                </li>
-            </ul>
-        <Typography>Total Ar {Intl.NumberFormat().format(props.getTotal())}</Typography>
+            
+            <Chip
+                        label={
+                            <Typography>
+                                {Intl.NumberFormat().format(props.getTotal())}
+                            </Typography>
+                        }
+                        color='primary'
+                        avatar={<Avatar>Ar</Avatar>}
+                        variant='outlined'
+                    />
         </div>
     )
 }
