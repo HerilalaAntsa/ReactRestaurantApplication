@@ -139,17 +139,28 @@ class Login extends Component {
           // Login
           this.props.handleClose();
           this.toggleLoading(true);
-          app.auth().signInWithEmailAndPassword(email, password);
-
-          this.props.enqueueSnackbar("Connexion avec succès",
-            {
-              variant: 'default',
-              anchorOrigin: {
-                vertical: 'top',
-                horizontal: 'center',
-              },
-            });
-          this.toggleLoading(false);
+          app.auth().signInWithEmailAndPassword(email, password)
+          .then((user) => {
+            this.props.enqueueSnackbar("Connexion avec succès",
+              {
+                variant: 'default',
+                anchorOrigin: {
+                  vertical: 'top',
+                  horizontal: 'center',
+                },
+              });
+            this.toggleLoading(false);
+          }).catch((error) => {
+            this.props.enqueueSnackbar("Error: " + error.message,
+              {
+                variant: 'default',
+                anchorOrigin: {
+                  vertical: 'top',
+                  horizontal: 'center',
+                },
+              });
+              this.toggleLoading(false);
+          })
         }
 
       })
@@ -199,9 +210,9 @@ class Login extends Component {
             horizontal: 'center',
           },
         });
-        this.setState({
-          redirect: true
-        })
+      this.setState({
+        redirect: true
+      })
       this.toggleLoading(false);
     }, function (error) {
       console.log("Error upgrading anonymous account", error);
