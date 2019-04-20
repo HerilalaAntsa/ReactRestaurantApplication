@@ -42,7 +42,7 @@ function DetailCommandeCarte(props) {
                 <div className={classes.details}>
                     <CardContent className={classes.content}>
                         <Badge badgeContent={props.commande.qte} color="secondary">
-                            <Typography  variant="title">
+                            <Typography  variant="h5">
                                 {props.commande.item.nom}
                             </Typography><br />
                         </Badge>
