@@ -16,7 +16,7 @@ function AppBarNavigation(props) {
             alignItems="center"
           >
             <Button color="inherit" component={RouterLink} to={ROUTES.LOGIN}>Log in</Button>
-            <Button color="inherit" component={RouterLink} to={ROUTES.LOGIN}>Log out</Button>
+            <Button color="inherit" component={RouterLink} to={ROUTES.LOGOUT}>Log out</Button>
             <Button color="inherit" component={RouterLink} to={ROUTES.ACCUEIL}>
               Accueil
             </Button>

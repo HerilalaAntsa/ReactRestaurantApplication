@@ -55,14 +55,14 @@ class Login extends Component {
       passwordInput: ''
     }
   }
-  _handleEmailChange(input) {
+  _handleEmailChange(event) {
     this.setState({
-      emailInput: input.target.value
+      emailInput: event.target.value
     });
   }
-  _handlePasswordChange(input) {
+  _handlePasswordChange(event) {
     this.setState({
-      passwordInput: input.target.value
+      passwordInput: event.target.value
     });
   }
   toggleLoading(newloading) {

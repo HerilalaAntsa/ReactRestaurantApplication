@@ -77,16 +77,23 @@ class Commande extends Component {
   handleCloseLogin() {
     this.setState({ openLogin: false });
   }
-  removeCommandeCarte(resto, commande, date) {
+  removeCommandeCarte(resto, commande) {
     const copieCommande = { ...this.state.commande }; // spread operator permert de cloner des object
     copieCommande[resto]['carte'][commande.item._id] = null;
+    if(Object.keys(copieCommande[resto]['carte']).length === 1 && !copieCommande[resto]['menu']){
+      copieCommande[resto] = null;
+    }
     this.setState({
       commande: copieCommande
     })
   }
-  removeCommandeMenu(resto, commande, combinaison, date) {
+  removeCommandeMenu(resto, commande, combinaison) {
     const copieCommande = { ...this.state.commande }; // spread operator permert de cloner des object
-    copieCommande[date[resto]]['menu'][commande.item._id][combinaison] = null;
+    copieCommande[resto]['menu'][commande.item._id][combinaison] = null;
+    let menuEmpty = Object.keys(copieCommande[resto]['menu']).length === 1 && Object.keys(copieCommande[resto]['menu'][commande.item._id]).length === 1;
+    if(!copieCommande[resto]['carte'] && menuEmpty){
+      copieCommande[resto] = null;
+    }
     this.setState({
       commande: copieCommande
     })
@@ -118,14 +125,8 @@ class Commande extends Component {
     copieCommande[resto]["isConfirmed"] = true;
   }
 
-  componentWillMount() {
-    console.log("Will mount");
-    let date = new Date().toISOString().slice(0, 10);
-    // this runs right before the <App> is rendered
-    this.ref = base.syncState("restaurant", {
-      context: this,
-      state: 'restaurant'
-    });
+  bindCommande(){
+    let date = new Date().toISOString().slice(0,10);
     app.auth().onAuthStateChanged(user => {
       if (user) {
         if (user.isAnonymous) {
@@ -139,12 +140,20 @@ class Commande extends Component {
         });
       } else {
         this.setState({ authentificated: false, user: {} });
-        base.removeBinding(this.ref);
+        if(this.ref){
+          base.removeBinding(this.ref);
+        }
       }
     });
+  }
+
+  componentWillMount() {
+    console.log("Will mount");
+    // this runs right before the <App> is rendered
     this.refResto = base.bindToState("restaurant", {
       context: this,
-      state: 'restaurant'
+      state: 'restaurant',
+      then: this.bindCommande.bind(this)
     });
   }
 
@@ -153,20 +162,17 @@ class Commande extends Component {
     if (this.ref) {
       base.removeBinding(this.ref);
     }
+    base.removeBinding(this.refResto)
   }
 
   render() {
     const { classes, theme } = this.props;
-    let restoDetail = {};
     let userCommande = Object.keys(this.state.commande).map((idresto) => {
-      if (this.state.restaurant) {
-        restoDetail = this.state.restaurant[idresto];
-      }
       let commande = this.state.commande[idresto];
       return <DetailCommandeRestaurant
         key={idresto}
         _id={idresto}
-        nomResto={restoDetail["nom"]}
+        nomResto={this.state.restaurant[idresto]["nom"]}
         item={commande}
         addCommandeCarte={this.addCommandeCarte}
         addCommandeMenu={this.addCommandeMenu}

@@ -9,58 +9,69 @@ class ModalCommandeCarte extends Component {
     super(props);
     this.state = {
       commande: {},
-      authentificated: false,
+      user: {},
     }
   }
-  componentWillMount() {
-    this.ref = base.syncState("commande", {
-      context: this,
-      state: 'commande'
-    })
+  componentWillMount() {    
+    app.auth().onAuthStateChanged(user => {      
+      if (user) {
+        var dateNow = new Date().toISOString().slice(0,10);
+        this.ref = base.syncState("commande/" + user.uid + '/' + dateNow, {
+          context: this,
+          state: 'commande'
+        })
+        this.setState({
+          user: user,
+        })
+      } else {
+        this.setState({ user: {} });
+        if(this.ref){
+          base.removeBinding(this.ref);
+        }
+      }
+    });
   }
   componentWillUnmount() {
     console.log("Will unmount");
-    base.removeBinding(this.ref);
+    if(this.ref){
+      base.removeBinding(this.ref);
+    }
   }
   addCommande() {
-    app.auth().onAuthStateChanged(user => {
+    var user = app.auth().currentUser;
       if (user) {
-        this.setState({
-          authentificated: true,
-        })
         this.saveCommande();
       } else {
         app.auth().signInAnonymously()
-          .then(() => {
-            this.setState({
-              authentificated: true,
-            });
-            this.saveCommande();
+        .then((cred) => {
+          //Est appelé avant le listener on authstatechanged
+          var dateNow = new Date().toISOString().slice(0, 10);
+          this.ref = base.syncState("commande/" + cred.user.uid + '/' + dateNow, {
+            context: this,
+            state: 'commande',
           })
-          .catch((error) => {
-            console.log(error.message)
-          })
+          this.saveCommande();
+        })
+        .catch((error) => {
+          console.log(error.message)
+        })
       }
-    });
   }
 
   saveCommande() {
     this.props.toggleLoading(true);
     const copieCommande = { ...this.state.commande }; // spread operator permert de cloner des object
-    var dateNow = new Date().toISOString().slice(0,10);
-    var currentUser = app.auth().currentUser.uid;
-    copieCommande[currentUser] = copieCommande[currentUser] || {};
-    copieCommande[currentUser][dateNow] = copieCommande[currentUser][dateNow] || {};
-    copieCommande[currentUser][dateNow][this.props.resto] = copieCommande[currentUser][dateNow][this.props.resto] || { 'menu': {}, 'carte': {} };
-    copieCommande[currentUser][dateNow][this.props.resto]['carte'] = copieCommande[currentUser][dateNow][this.props.resto]['carte'] || {};
-    copieCommande[currentUser][dateNow][this.props.resto]['isConfirmed'] = false;
-    copieCommande[currentUser][dateNow][this.props.resto]['carte'][this.props.carte._id] = copieCommande[currentUser][dateNow][this.props.resto]['carte'][this.props.carte._id] || {};
-    let qte = copieCommande[currentUser][dateNow][this.props.resto]['carte'][this.props.carte._id]['qte'] || 0;
+    copieCommande[this.props.resto] = copieCommande[this.props.resto] || { 'menu': {}, 'carte': {} };
+    copieCommande[this.props.resto]['carte'] = copieCommande[this.props.resto]['carte'] || {};
+    copieCommande[this.props.resto]['isConfirmed'] = false;
+    copieCommande[this.props.resto]['carte'][this.props.carte._id] = copieCommande[this.props.resto]['carte'][this.props.carte._id] || {};
+    let qte = copieCommande[this.props.resto]['carte'][this.props.carte._id]['qte'] || 0;
     let newCommande = {
       'qte': qte + 1,
       'item': this.props.carte
     }
-    copieCommande[currentUser][dateNow][this.props.resto]['carte'][this.props.carte._id] = newCommande;
+    copieCommande[this.props.resto]['carte'][this.props.carte._id] = newCommande;
+    console.log(copieCommande)
     this.setState({
       commande: copieCommande
     });

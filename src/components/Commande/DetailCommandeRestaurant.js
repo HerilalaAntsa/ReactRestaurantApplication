@@ -26,7 +26,7 @@ function DetailCommandeRestaurant(props) {
         let detail = Object.keys(item).map((j) => {
             let value = item[j];
             let combinaison = value.horsdoeuvre + value.plat + value.dessert;
-            let totalMenu = item.item.prix * item.qte;
+            let totalMenu = value.item.prix * value.qte;
             total += totalMenu;
             return <DetailCommandeMenu key={j}
             total = {totalMenu}
