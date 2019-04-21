@@ -8,32 +8,45 @@ import { Link } from 'react-router-dom';
 import { app } from '../../constants/base';
 
 const storageRef = app.storage().ref();
-class RestaurantDetail extends Component{ 
-    constructor(props){
+class RestaurantDetail extends Component {
+    constructor(props) {
         super(props);
         this.state = {
-            img : '',
+            img: '',
         }
-        this.getImageUrl(this.props.item.photo);
-    }   
-    getImageUrl(value){
-        storageRef.child(value).getDownloadURL().then((url)=>{
+        this.getImageUrl(props.item.photo);
+    }
+    getImageUrl(value) {
+        storageRef.child(value).getDownloadURL().then((url) => {
             this.setState({
-                img : url,
+                img: url,
             })
         });
     }
-    render(){
+    render() {
         return (
             <Grid container spacing={8} wrap="nowrap" alignItems="center">
                 <Grid item>
-                    <img width={350} src={this.state.img} alt={this.props.item.nom} />
+                    <input
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        type="file"
+                        name={this.props.item._id}
+                        id='resto-img-input'
+                        onChange={this.props.handleUploadFile}
+                    />
+                    <label htmlFor='resto-img-input'>
+                        <Button variant="text"
+                            focusRipple component="span">
+                            <img width={350} src={this.state.img} alt={this.props.item.nom} />
+                        </Button>
+                    </label>
                 </Grid>
                 <Grid item>
                     <Grid container direction="column">
                         <Grid item>
-                            <Button variant="outlined" color="primary" component={Link} to={ROUTES.MENURESTAURANT + '/' + this.props.item._id }>Voir ses Menus</Button>
-                            <Button variant="outlined" color="primary" component={Link} to={ROUTES.CARTERESTAURANT + '/' + this.props.item._id }>Voir sa Carte</Button>
+                            <Button variant="outlined" color="primary" component={Link} to={ROUTES.MENURESTAURANT + '/' + this.props.item._id}>Voir ses Menus</Button>
+                            <Button variant="outlined" color="primary" component={Link} to={ROUTES.CARTERESTAURANT + '/' + this.props.item._id}>Voir sa Carte</Button>
                         </Grid>
                     </Grid>
                     <List dense>
@@ -60,7 +73,7 @@ class RestaurantDetail extends Component{
                         </ListItem>
                     </List>
                 </Grid>
-            </Grid>        
+            </Grid>
         )
     }
 }

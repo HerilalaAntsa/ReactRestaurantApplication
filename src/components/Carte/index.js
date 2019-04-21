@@ -14,6 +14,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import AddIcon from '@material-ui/icons/Add';
 import {Link} from 'react-router-dom';
 import ModalNew from './ModalNew';
+import { withSnackbar } from 'notistack';
 
 function TabContainer(props) {
   return (
@@ -49,8 +50,41 @@ class CarteList extends Component {
       detail: {},
       value: 0,
       loading: false,
+      photo: '',
+      plat: '',
       user: null,
     }
+  }
+  handleUploadFile(event){
+    var fileList = event.target.files;
+    var name = 'carte/' + this.state.id + fileList[0].name;
+    this.setState({
+      photo: name,
+      plat: event.target.name
+    })
+    var reader = new FileReader();
+    reader.onload = (loadedEvent) => {        
+        var storageRef = app.storage().ref();
+        var imgref = storageRef.child(this.state.photo);
+        imgref.putString(loadedEvent.target.result, 'data_url').then((snapshot) => {
+        let  copieCarte = {...this.state.carte};
+        copieCarte[this.state.plat]['photo'] = imgref.fullPath || "default-thumbnail.jpg";
+        this.setState({
+          carte: copieCarte
+        });
+        this.toggleLoading(false);
+        this.props.enqueueSnackbar("L'image a été correctement ajouté(e)",
+          {
+            variant: 'default',
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'center',
+            },
+          });
+      });
+    }
+    this.toggleLoading(true);
+    reader.readAsDataURL(fileList[0]);
   }
   handleChange = (event, value) => {
     this.setState({ value });
@@ -111,7 +145,8 @@ class CarteList extends Component {
                     id={this.state.id}
                     item={item}
                     authentificated={this.state.authentificated}
-                    handleClickOpenCommande={this.handleClickOpenCommande.bind(this)} />
+                    handleClickOpenCommande={this.handleClickOpenCommande.bind(this)}
+                    handleUploadFile={this.handleUploadFile.bind(this)} />
       switch (item.type) {
         case "Hors d'oeuvre":
           tabHorsDoeuvre.push(comp);
@@ -203,4 +238,4 @@ class CarteList extends Component {
 function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
-export default withStyles(styles)(CarteList);
+export default withStyles(styles)(withSnackbar(CarteList));
