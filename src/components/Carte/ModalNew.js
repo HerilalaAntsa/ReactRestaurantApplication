@@ -120,6 +120,7 @@ class ModalNew extends Component {
   }
 
   render() {
+    console.log(app.auth().currentUser)
     const {classes} = this.props;
     return (
       <Dialog
