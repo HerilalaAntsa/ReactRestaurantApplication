@@ -127,7 +127,8 @@ class App extends Component {
             >
               <Divider />
               <Commande
-                handleDrawerClose={this.handleDrawerClose.bind(this)} />
+                handleDrawerClose={this.handleDrawerClose.bind(this)}
+                authentificated={this.state.authentificated}/>
             </Drawer>
           </div>
             <Fab onClick={this.handleDrawerOpen.bind(this)} color="secondary" aria-label="Add" className={classes.fab}>
