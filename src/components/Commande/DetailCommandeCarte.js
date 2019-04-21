@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Badge, IconButton, Chip, Tooltip } from '@material-ui/core';
+import { Typography, Badge, IconButton, Chip, Tooltip, Grid, ListItem, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
@@ -37,42 +37,45 @@ const styles = theme => ({
 function DetailCommandeCarte(props) {
     const { classes } = props;
     return (
-        <div index={props.index}>
-            <Card className={classes.card}>
-                <div className={classes.details}>
-                    <CardContent className={classes.content}>
-                        <Badge badgeContent={props.commande.qte} color="secondary">
-                            <Typography  variant="h5">
-                                {props.commande.item.nom}
-                            </Typography><br />
-                        </Badge>
-                            <Typography variant="subtitle1" color="textSecondary">
-                            <Chip label={props.commande.item.type} /> - Ar {Intl.NumberFormat().format(props.commande.item.prix)}
-                            </Typography>
-                            
-                    <div className={classes.controls}>
-                        <Typography>total Ar {Intl.NumberFormat().format(props.total)}</Typography>
-                        <Tooltip title={"Rajouter la quantité de " + props.commande.item.nom}>
+    <ListItem divider>
+        <Grid container>
+            <Grid item>
+                <ListItemText primary={<span>
+                        ({props.commande.qte}) {props.commande.item.nom}
+                        <Chip label={props.commande.item.type} />
+                    </span>}
+                        secondary={<span>
+                            Ar {Intl.NumberFormat().format(props.commande.item.prix)}
+                            <Typography variant="body1" component="span">total Ar {Intl.NumberFormat().format(props.total)}</Typography>
+                        </span>} />
+            </Grid>
+            <Grid item>
+                <Grid container direction='row'>
+                    <Grid item>
+                        <Tooltip title={"Ajouter la quantité de " + props.commande.item.nom}>
                             <IconButton onClick={props.addCommande} color="primary" aria-label="Rajouter">
                                 <AddCircleOutlineIcon />
                             </IconButton>
                         </Tooltip>
+                    </Grid>
+                    <Grid item>
                         <Tooltip title={"Réduire la quantité de " + props.commande.item.nom}>
                             <IconButton onClick={props.substractCommande} color="primary" aria-label="Retirer">
                                 <RemoveCircleOutlineIcon />
                             </IconButton>
                         </Tooltip>
+                    </Grid>
+                    <Grid item>
                         <Tooltip title="Retirer ">
                             <IconButton onClick={props.removeCommande} aria-label="Delete" color="secondary">
                                 <DeleteOutlineIcon />
                             </IconButton>
                         </Tooltip>
-                    </div>
-                    </CardContent>
-                    
-                </div>
-            </Card>
-        </div>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+    </ListItem>
     )
 }
 

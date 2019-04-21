@@ -16,6 +16,9 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 const drawerWidth = 500;
 
 const styles = theme => ({
+  titre: {
+    fontFamily: 'Allura',
+  },
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
@@ -56,20 +59,13 @@ class Commande extends Component {
       openLogin: false,
       authentificated: false,
       user: {},
+      total: 0,
     }
     this.total = 0;
-    this.totalCarte = 0;
-    this.totalMenu = 0;
-  }
-  setTotalCarte(value) {
-    this.totalCarte = value
-  }
-  setTotalMenu(value) {
-    this.totalMenu = value
   }
 
-  getTotal() {
-    return this.totalCarte + this.totalMenu;
+  addTotal(value) {
+    this.total += value;
   }
   handleClickOpenLogin() {
     this.setState({ openLogin: true });
@@ -80,7 +76,7 @@ class Commande extends Component {
   removeCommandeCarte(resto, commande) {
     const copieCommande = { ...this.state.commande }; // spread operator permert de cloner des object
     copieCommande[resto]['carte'][commande.item._id] = null;
-    if(Object.keys(copieCommande[resto]['carte']).length === 1 && !copieCommande[resto]['menu']){
+    if (Object.keys(copieCommande[resto]['carte']).length === 1 && !copieCommande[resto]['menu']) {
       copieCommande[resto] = null;
     }
     this.setState({
@@ -91,7 +87,7 @@ class Commande extends Component {
     const copieCommande = { ...this.state.commande }; // spread operator permert de cloner des object
     copieCommande[resto]['menu'][commande.item._id][combinaison] = null;
     let menuEmpty = Object.keys(copieCommande[resto]['menu']).length === 1 && Object.keys(copieCommande[resto]['menu'][commande.item._id]).length === 1;
-    if(!copieCommande[resto]['carte'] && menuEmpty){
+    if (!copieCommande[resto]['carte'] && menuEmpty) {
       copieCommande[resto] = null;
     }
     this.setState({
@@ -125,8 +121,8 @@ class Commande extends Component {
     copieCommande[resto]["isConfirmed"] = true;
   }
 
-  bindCommande(){
-    let date = new Date().toISOString().slice(0,10);
+  bindCommande() {
+    let date = new Date().toISOString().slice(0, 10);
     app.auth().onAuthStateChanged(user => {
       if (user) {
         if (user.isAnonymous) {
@@ -140,7 +136,7 @@ class Commande extends Component {
         });
       } else {
         this.setState({ authentificated: false, user: {} });
-        if(this.ref){
+        if (this.ref) {
           base.removeBinding(this.ref);
         }
       }
@@ -179,46 +175,43 @@ class Commande extends Component {
         removeCommandeMenu={this.removeCommandeMenu}
         removeCommandeCarte={this.removeCommandeCarte}
         caller={this}
-        getTotal={this.getTotal.bind(this)}
-        setTotalCarte={this.setTotalCarte.bind(this)}
-        setTotalMenu={this.setTotalMenu.bind(this)}
-        totalCarte={this.totalCarte}
-        totalMenu={this.totalMenu}
+        addTotal={this.addTotal.bind(this)}
       />
     });
+    console.log(this.total);
     return (
       <div className="App">
         <div className={classes.drawerHeader}>
           <IconButton onClick={this.props.handleDrawerClose}>
             {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
-          <h3>Liste de vos commandes aujourd'hui</h3>
+          <Typography align="center" className={classes.titre} variant="h3">Liste de vos commandes du jour</Typography>
         </div>
-        <Divider />
+        <Divider/>
         <div>
           {userCommande}
         </div>
 
-          <Divider />
-          <Grid container spacing={24}>   
+        <Divider />
+        <Grid container spacing={24}>
           <Grid item xs={4}></Grid>
-            {userCommande.length!==0
-              ? <Grid item xs={8}>
-                  {this.props.authentificated
-                  ? <Typography>Vos commandes sont désormais considérées.</Typography>
-                  : <div> 
-                      <Button color="primary" disabled={userCommande.length === 0} size="small" onClick={() => this.handleClickOpenLogin()}>
-                        Se connecter
+          {userCommande.length !== 0
+            ? <Grid item xs={8}>
+              {this.props.authentificated
+                ? <Typography>Vos commandes sont désormais considérées.</Typography>
+                : <div>
+                  <Button color="primary" disabled={userCommande.length === 0} size="small" onClick={() => this.handleClickOpenLogin()}>
+                    Se connecter
                       </Button>
-                      <Typography variant="caption  ">Pour que vos commandes soit considérées, veuillez vous connecter</Typography>
-                    </div>
-                  }
-                </Grid>
-              :   <Grid item xs={8}>
-                    <Typography>Aucune commande n'a encore été faite</Typography>
-                  </Grid>
+                  <Typography variant="caption">Pour que vos commandes soient considérées, veuillez vous connecter</Typography>
+                </div>
               }
-          </Grid>
+            </Grid>
+            : <Grid item xs={8}>
+              <Typography>Aucune commande n'a encore été faite</Typography>
+            </Grid>
+          }
+        </Grid>
 
         <Login
           handleClose={this.handleCloseLogin.bind(this)}

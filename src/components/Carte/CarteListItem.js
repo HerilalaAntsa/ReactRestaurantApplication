@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, ListItem, Avatar, ListItemText, withStyles, Chip, Grid, Typography } from '@material-ui/core';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart'
+import { app } from '../../constants/base';
 
 const styles = theme => ({
     titre: {
@@ -14,8 +15,11 @@ const styles = theme => ({
         marginRight: theme.spacing.unit,
     }
 });
+    
 function CarteListItem(props) {
     const { classes } = props;
+    var storageRef = app.storage().ref();
+    var imgref = storageRef.child(props.item.photo);
     return (
         <ListItem key={props.item._id} alignItems="flex-start" divider>
             <Grid container spacing={8} wrap="nowrap" alignItems="center">
