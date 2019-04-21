@@ -136,9 +136,6 @@ class Commande extends Component {
         });
       } else {
         this.setState({ authentificated: false, user: {} });
-        if (this.ref) {
-          base.removeBinding(this.ref);
-        }
       }
     });
   }

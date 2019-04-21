@@ -25,9 +25,6 @@ class ModalCommandeCarte extends Component {
         })
       } else {
         this.setState({ user: {} });
-        if(this.ref){
-          base.removeBinding(this.ref);
-        }
       }
     });
   }
