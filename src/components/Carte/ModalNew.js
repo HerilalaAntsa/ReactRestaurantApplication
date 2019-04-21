@@ -26,16 +26,32 @@ class ModalNew extends Component {
     this.state = {
       commande: {},
       user: {},
-      nom: {},
+      nom: "",
       description: "",
       prix: "",
       photo: "",
       type: "",
+      file: '',
     }
   }
   handleChange(event){
     this.setState({ [event.target.name]: event.target.value });
   };
+  handleUploadFile(event){
+    var fileList = event.target.files;
+    var name = 'carte/' + this.props.resto + fileList[0].name;
+    console.log(name)
+    this.setState({
+      photo: name,
+    })
+    var reader = new FileReader();
+    reader.onload = (loadedEvent) => {
+        this.setState({
+          file: loadedEvent.target.result,
+        })
+    }
+    reader.readAsDataURL(fileList[0]);
+  }
   componentWillMount() {
     app.auth().onAuthStateChanged(user => {
       if (user) {
@@ -70,31 +86,37 @@ class ModalNew extends Component {
   saveCarte() {
     this.props.toggleLoading(true);
     let uuid = uuidv4();
-    const copieCarte = { ...this.state.commande }; // spread operator permert de cloner des object
+    const copieCarte = { ...this.state.carte }; // spread operator permert de cloner des object
     copieCarte[this.props.resto] = copieCarte[this.props.resto] || {};
-    copieCarte[this.props.resto][uuid] = copieCarte[this.props.resto][uuid] || {};
-    let newCarte = {
-      '_id': uuid,
-      'description': this.state.description,
-      'nom': this.state.nom,
-      'photo': this.state.photo || "https://firebasestorage.googleapis.com/v0/b/exo-restaurant.appspot.com/o/default-thumbnail.jpg?alt=media&token=9c55ab62-39a5-4c7d-93d3-a96f26b8cf7e",
-      'prix': this.state.prix,
-      'type': this.state.type,
-    }
-    copieCarte[this.props.resto][uuid]  = newCarte;
-    this.setState({
-      carte: copieCarte
-    });
-    this.props.toggleLoading(false);
-    this.props.handleClose();
-    this.props.enqueueSnackbar("Un(e) \" " + this.state.nom + " \" a été correctement ajouté(e)",
-      {
-        variant: 'default',
-        anchorOrigin: {
-          vertical: 'top',
-          horizontal: 'center',
-        },
+    var storageRef = app.storage().ref();
+    var imgref = storageRef.child(this.state.photo);
+    imgref.putString(this.state.file, 'data_url').then((snapshot) => {
+      console.log('Uploaded a data_url string!');
+      let newCarte = {
+        '_id': uuid,
+        'description': this.state.description,
+        'nom': this.state.nom,
+        'photo': imgref.fullPath || "default-thumbnail.jpg",
+        'prix': this.state.prix,
+        'type': this.state.type,
+      }
+      copieCarte[this.props.resto][uuid]  = newCarte;
+      this.setState({
+        carte: copieCarte
       });
+      this.props.toggleLoading(false);
+      this.props.handleClose();
+      this.props.enqueueSnackbar("Un(e) \" " + this.state.nom + " \" a été correctement ajouté(e)",
+        {
+          variant: 'default',
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: 'center',
+          },
+        });
+    });
+    
+    
   }
 
   render() {
@@ -143,9 +165,8 @@ class ModalNew extends Component {
               <InputLabel htmlFor="photo">Photo</InputLabel>
               <Input name="photo"
                 type="file"
-                accept="image/*"                
-                value={this.state.photo}
-                onChange={this.handleChange.bind(this)}
+                accept="image/*"
+                onChange={this.handleUploadFile.bind(this)}
                 inputProps={{
                   'aria-label': 'Importer une image du plat',
                 }}

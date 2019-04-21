@@ -15,8 +15,12 @@ function AppBarNavigation(props) {
             justify="center"
             alignItems="center"
           >
-            <Button onClick={()=>{props.openLogin()}} color="inherit">Log in</Button>
-            <Button color="inherit" component={Link} to={ROUTES.LOGOUT}>Log out</Button>
+            { props.authentified ? 
+                <Button color="inherit" component={Link} to={ROUTES.LOGOUT}>Déconnexion</Button>
+              : <Button onClick={()=>{props.openLogin()}} color="inherit">Connexion</Button>
+            }
+            
+            
             <Button color="inherit" component={Link} to={ROUTES.ACCUEIL}>
               Accueil
             </Button>

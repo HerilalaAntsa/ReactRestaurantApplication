@@ -9,9 +9,6 @@ class StepperNew extends Component {
     this.state = {
       activeStep: 0,
       completed: {},
-      horsdoeuvre: {},
-      plat: {},
-      dessert: {},
     }
   }
   getSteps() {
@@ -24,21 +21,23 @@ class StepperNew extends Component {
         return <StepperNewForm
           suggestion={this.props.horsdoeuvre}
           name="horsdoeuvre"
+          type="Hors d'oeuvre"
           label="Que choisiriez-vous comme hors d'oeuvre ?"
-          handleRadioSelection={this.handleRadioSelection.bind(this)} />;
+          menuState={this.props.menuState} />;
       case 1:
         return <StepperNewForm
           suggestion={this.props.plat}
+          type="Plats"
           name="plat"
           label="Que voudriez-vous comme plat ?"
-          handleRadioSelection={this.handleRadioSelection.bind(this)} />;
+          menuState={this.props.menuState} />;
       case 2:
         return <StepperNewForm
           suggestion={this.props.dessert}
+          type="Desserts"
           name="dessert"
           label="Pour finir, quel sera les desserts ?"
-          handleRadioSelection={this.handleRadioSelection.bind(this)}
-          />;
+          menuState={this.props.menuState} />;
       default:
         return '&Eacute;tape inconnue';
     }
@@ -72,21 +71,6 @@ class StepperNew extends Component {
       horsdoeuvre: undefined,
       plat: undefined,
       dessert: undefined,
-    })
-    this.setState({
-      activeStep: 0,
-      completed: {},
-      horsdoeuvre: "",
-      plat: "",
-      dessert: "",
-    });
-  }
-  handleRadioSelection(e) {
-    this.props.menuState({
-      [e.target.name]: e.target.value,
-    });
-    this.setState({
-      [e.target.name]: e.target.value,
     })
   }
   handleStep = step => () => {
@@ -134,7 +118,7 @@ class StepperNew extends Component {
                 </Button>
             </div>
           ) : (
-              <Grid container spacing={16}>
+              <Grid container spacing={16} direction="column">
                 <Grid item>
                   {this.getStepContent(activeStep)}
                 </Grid>

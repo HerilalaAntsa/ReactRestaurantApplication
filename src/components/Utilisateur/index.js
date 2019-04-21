@@ -20,6 +20,7 @@ import Commande from '../Commande';
 import { Drawer, withStyles, Divider, Fab, Slide } from '@material-ui/core';
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 import classNames from 'classnames';
+import { app } from '../../constants/base';
 
 const drawerWidth = 400;
 const styles = theme => ({
@@ -64,7 +65,13 @@ class App extends Component {
       this.state = {
         openCommande: true,
         openLogin: false,
+        authentificated: false,
       };
+      app.auth().onAuthStateChanged(user => {
+        this.setState({
+          authentificated: user && !user.isAnonymous
+        })
+      });
     }
     handleDrawerOpen() {
       this.setState({ openCommande: true });
@@ -91,7 +98,7 @@ class App extends Component {
               })}>
               <Router>
                 <div>
-                  <AppBarNavigation openLogin={this.handleClickOpenLogin.bind(this)} />
+                  <AppBarNavigation authentified={this.state.authentificated} openLogin={this.handleClickOpenLogin.bind(this)} />
   
                   <hr />
   

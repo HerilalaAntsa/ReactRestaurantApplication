@@ -6,7 +6,8 @@ const config = {
  // NE PRENEZ PAS LES VALEURS QUI SONT ICI !!!
     apiKey: "AIzaSyA4BVn7dJPxO3u-KXfgh2W1kr7ZGc0kSZc",
     authDomain: "exo-restaurant.firebaseapp.com",
-    databaseURL: "https://exo-restaurant.firebaseio.com" // pas de , à la fin
+    databaseURL: "https://exo-restaurant.firebaseio.com",
+    storageBucket: "exo-restaurant.appspot.com" // pas de , à la fin
 };
 
 const app = firebase.initializeApp(config)
