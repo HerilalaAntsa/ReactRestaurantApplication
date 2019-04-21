@@ -14,7 +14,6 @@ class RestaurantDetail extends Component {
         this.state = {
             img: '',
         }
-        this.getImageUrl(props.item.photo);
     }
     getImageUrl(value) {
         storageRef.child(value).getDownloadURL().then((url) => {
@@ -24,6 +23,7 @@ class RestaurantDetail extends Component {
         });
     }
     render() {
+        this.getImageUrl(this.props.item.photo);
         return (
             <Grid container spacing={8} wrap="nowrap" alignItems="center">
                 <Grid item>
