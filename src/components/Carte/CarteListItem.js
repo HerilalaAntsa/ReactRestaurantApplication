@@ -24,7 +24,6 @@ class CarteListItem extends Component{
             img : '',
             loading: false,
         }
-        this.getImageUrl(this.props.item.photo);
     }
     getImageUrl(value){
         storageRef.child(value).getDownloadURL().then((url)=>{
@@ -34,6 +33,7 @@ class CarteListItem extends Component{
         });
     }
     render(){
+        this.getImageUrl(this.props.item.photo);
         const { classes } = this.props;
         return (
             <ListItem key={this.props.item._id} alignItems="flex-start" divider>
