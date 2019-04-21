@@ -34,7 +34,8 @@ Ouvrez [http://localhost:3000](http://localhost:3000) pour la voir sur le naviga
 ### Authentification
 - Login, Sign In et Log Out
 - Mode Admin, Mode utilisateur et mode visiteur (anonymous)  <br>
-NB: les nouveaux utilisateurs seront inscrits en "mode utilisateur" par défaut. Des comptes admin seront déjà créés dans la base de donnée que vous utiliseriez pour voir le "mode admin".
+NB: les nouveaux utilisateurs seront inscrits en "mode utilisateur" par défaut. Des comptes admin seront déjà créés dans la base de donnée que vous utiliseriez pour voir le "mode admin". <br>
+##### Compte admin: email "admin@gmail.com" mdp: "administrateur"
 #### Mode Admin (authentifié)
 Toutes les fonctionnalités sont disponibles + boutons qui pourront gérer les restaurants, carte et menu.
 #### Mode Utilisateur (authentifié)
