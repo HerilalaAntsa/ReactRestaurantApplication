@@ -57,7 +57,8 @@ class Login extends Component {
       username: '',
       confirmPassword: '',
       value: 0,
-      isMatched: true
+      isMatched: true,
+      isSixChar: false
     }
   }
   handleChange = (event, value) => {
@@ -73,17 +74,22 @@ class Login extends Component {
     });
   }
   handleChangeConfirmInput(event) {
-    if(event.target.value!=this.state.password){
+    if(event.target.value.length>5){
       this.setState({
-        isMatched: false
+        isSixChar: true
       });
-    }else{
+    }
+    if(event.target.value===this.state.password){
       this.setState({
         isMatched: true
       });
+    }else{
+      this.setState({
+        isMatched: false
+      });
     }
     this.setState({
-      confirmPassword: event.target.value
+      [event.target.name]: event.target.value
     });
   }
   toggleLoading(newloading) {
@@ -95,7 +101,6 @@ class Login extends Component {
   signUpWithEmailPassword() {
     const email = this.state.email;
     const password = this.state.password;
-    const confirmPassword = this.state.confirmPassword;
     const username = this.state.username;
     const roles = "UTILISATEUR";
 
@@ -243,8 +248,11 @@ class Login extends Component {
               value={this.state.confirmPassword}
               onChange={this.handleChangeConfirmInput.bind(this)}
               placeholder="Mot de passe" autoComplete="current-password" />
-            <Typography hidden={this.state.isMatched}>Les mots de passe ne correspondent pas</Typography>
-          </FormControl>
+            { !this.state.isMatched 
+              ? <Typography style={{color:'#DC143C'}}>Les mots de passe ne correspondent pas</Typography>
+              : null
+            }
+            </FormControl>
           <FormControl margin="normal" required fullWidth>
             <InputLabel htmlFor="username">Identifiant</InputLabel>
             <Input autoComplete="username" name="username"
@@ -300,7 +308,7 @@ class Login extends Component {
                         name="password"
                         type={this.state.showPassword ? 'text' : 'password'}
                         value={this.state.password}
-                        onChange={this.handleChangeInput.bind(this)}
+                        onChange={this.handleChangeConfirmInput.bind(this)}
                         endAdornment={
                           <InputAdornment position="end">
                             <IconButton
@@ -312,6 +320,10 @@ class Login extends Component {
                           </InputAdornment>
                         }
                       />
+                      { !this.state.isSixChar
+                        ? <Typography style={{color:'#DC143C'}}>Au moins 6 characteres</Typography>
+                        : null
+                      }
                     </FormControl>
                     {this.getInput(this.state.value)}
                   </form>
