@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom'
 import { app } from '../../constants/base';
-import { DialogContent, DialogActions, Button, Dialog, Paper, InputLabel, Input, AppBar, Tabs, Tab, IconButton, InputAdornment } from '@material-ui/core';
+import { DialogContent, DialogActions, Button, Dialog, Paper, InputLabel, Input, AppBar, Tabs, Tab, IconButton, InputAdornment, Typography } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControl from '@material-ui/core/FormControl';
@@ -57,6 +57,7 @@ class Login extends Component {
       username: '',
       confirmPassword: '',
       value: 0,
+      isMatched: true
     }
   }
   handleChange = (event, value) => {
@@ -71,6 +72,20 @@ class Login extends Component {
       [event.target.name]: event.target.value
     });
   }
+  handleChangeConfirmInput(event) {
+    if(event.target.value!=this.state.password){
+      this.setState({
+        isMatched: false
+      });
+    }else{
+      this.setState({
+        isMatched: true
+      });
+    }
+    this.setState({
+      confirmPassword: event.target.value
+    });
+  }
   toggleLoading(newloading) {
     this.setState({
       loading: newloading,
@@ -80,10 +95,14 @@ class Login extends Component {
   signUpWithEmailPassword() {
     const email = this.state.email;
     const password = this.state.password;
+    const confirmPassword = this.state.confirmPassword;
+    const username = this.state.username;
+    const roles = "UTILISATEUR";
 
     // creation utilisateur
     this.props.handleClose();
     this.toggleLoading(true);
+    console.log(firebase)
     app.auth().createUserWithEmailAndPassword(email, password)
       .then((cred) => {
         this.props.enqueueSnackbar(
@@ -96,14 +115,21 @@ class Login extends Component {
             },
           });
         this.toggleLoading(false);
+        return app.database()
+        .ref(cred.user.uid)
+        .set({
+          username,
+          email,
+          roles,
+        })
       })
       .catch((error) => {
         this.props.enqueueSnackbar(error.message,
           {
             variant: 'default',
             anchorOrigin: {
-              vertical: 'top',
-              horizontal: 'center',
+                vertical: 'top',
+                horizontal: 'center',
             },
           });
         this.toggleLoading(false);
@@ -146,7 +172,6 @@ class Login extends Component {
     const password = this.state.passwordInput;
 
     var credential = firebase.auth.EmailAuthProvider.credential(email, password);
-    console.log(app.auth().currentUser)
     app.auth().currentUser.linkAndRetrieveDataWithCredential(credential).then(function (usercred) {
       var user = usercred.user;
       this.props.handleClose();
@@ -217,15 +242,16 @@ class Login extends Component {
             <InputLabel htmlFor="confirmPassword">Confirmer votre mot de passe</InputLabel>
             <Input name="confirmPassword" type="password"
               value={this.state.confirmPassword}
-              onChange={this.handleChangeInput.bind(this)}
+              onChange={this.handleChangeConfirmInput.bind(this)}
               placeholder="Mot de passe" autoComplete="current-password" />
+            <Typography hidden={this.state.isMatched}>Les mots de passe ne correspondent pas</Typography>
           </FormControl>
           <FormControl margin="normal" required fullWidth>
             <InputLabel htmlFor="username">Identifiant</InputLabel>
             <Input autoComplete="username" name="username"
               value={this.state.username}
               onChange={this.handleChangeInput.bind(this)}
-              placeholder="Identifiant" autoFocus />
+              placeholder="Nom d'utilisateur" autoFocus />
           </FormControl>
         </div>
       )

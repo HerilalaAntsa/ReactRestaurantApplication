@@ -81,7 +81,6 @@ class ModalNew extends Component {
       'prix': this.state.prix,
       'type': this.state.type,
     }
-    console.log(copieCarte)
     copieCarte[this.props.resto][uuid]  = newCarte;
     this.setState({
       carte: copieCarte
@@ -99,6 +98,7 @@ class ModalNew extends Component {
   }
 
   render() {
+    console.log(app.auth().currentUser)
     const {classes} = this.props;
     return (
       <Dialog
