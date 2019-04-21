@@ -51,7 +51,7 @@ class CarteList extends Component {
       value: 0,
       loading: false,
       photo: '',
-      plat: ''
+      plat: '',
       user: null,
     }
   }
