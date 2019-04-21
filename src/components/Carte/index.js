@@ -52,6 +52,7 @@ class CarteList extends Component {
       loading: false,
       photo: '',
       plat: ''
+      user: null,
     }
   }
   handleUploadFile(event){
@@ -104,14 +105,12 @@ class CarteList extends Component {
   componentWillMount() {
     this.removeAuthListener = app.auth().onAuthStateChanged((user) => {
       if (user) {
-        this.setState({
-          authentificated: true,
-        })
-      } else {
-        this.setState({
-          authentificated: false,
-        })
-      }
+        if(!user.isAnonymous){
+          this.setState({
+            user: user
+          })
+        }
+      } 
     })
     this.ref = base.syncState("carte/" + this.state.id, {
       context: this,
@@ -185,10 +184,13 @@ class CarteList extends Component {
             </Typography>
           </Grid>
           <Grid item>
-            <Fab onClick={this.handleClickOpenNew.bind(this)} color="secondary" variant="extended" aria-label="Delete" className={classes.fab}>
+          {this.state.user && this.state.user["email"].indexOf("admin")!==-1
+            ? <Fab onClick={this.handleClickOpenNew.bind(this)} color="secondary" variant="extended" aria-label="Delete" className={classes.fab}>
               <AddIcon className={classes.extendedIcon} />
               Ajouter un plat à la carte
             </Fab>
+            : null
+          }
           </Grid>
         </Grid>
         <div className={classes.root}>

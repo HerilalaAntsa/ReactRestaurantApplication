@@ -3,7 +3,7 @@ import MenuListItem from './MenuListItem';
 import ModalDetail from './ModalDetail';
 import ModalCommande from './ModalCommande';
 import { Slide, CircularProgress, Dialog, DialogContent, Grid, Typography, withStyles, IconButton, Fab } from '@material-ui/core';
-import { base } from '../../constants/base';
+import { app, base } from '../../constants/base';
 import { RESTAURANT } from '../../constants/routes';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import AddIcon from '@material-ui/icons/Add';
@@ -33,6 +33,7 @@ class MenuList extends Component {
       openNew: false,
       detail: {},
       loading: false,
+      user: null
     }
   }
   handleClickOpenDetail(menu) {
@@ -61,6 +62,15 @@ class MenuList extends Component {
 
   componentWillMount() {
     console.log("Will mount");
+    this.removeAuthListener = app.auth().onAuthStateChanged((user) => {
+      if (user) {
+        if(!user.isAnonymous){
+          this.setState({
+            user: user
+          })
+        }
+      } 
+    })
     // this runs right before the <App> is rendered
     this.ref = base.syncState("menu/" + this.state.id, {
       context: this,
@@ -103,10 +113,13 @@ class MenuList extends Component {
             </Typography>
           </Grid>
           <Grid item>
-            <Fab onClick={this.handleClickOpenNew.bind(this)} color="secondary" variant="extended" aria-label="Delete" className={classes.fab}>
+          {this.state.user && this.state.user["email"].indexOf("admin")!==-1
+            ? <Fab onClick={this.handleClickOpenNew.bind(this)} color="secondary" variant="extended" aria-label="Delete" className={classes.fab}>
               <AddIcon className={classes.extendedIcon} />
               Ajouter un menu
             </Fab>
+            : null 
+          }
           </Grid>
         </Grid>
         <Grid container spacing={24} justify="center" alignItems="center">
