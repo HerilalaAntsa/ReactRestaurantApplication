@@ -28,7 +28,7 @@ class RestaurantListItem extends Component {
             this.setState({
                 img : url,
             })
-        });
+        }).catch(()=>{});
     }
     
     render(){

@@ -15,7 +15,7 @@ class DetailPlat extends Component {
             this.setState({
                 img : url,
             })
-        });
+        }).catch(()=>{});
     }
     render(){
         this.getImageUrl(this.props.plat.photo);

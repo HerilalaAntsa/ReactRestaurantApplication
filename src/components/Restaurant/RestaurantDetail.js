@@ -20,7 +20,7 @@ class RestaurantDetail extends Component {
             this.setState({
                 img: url,
             })
-        });
+        }).catch(()=>{});
     }
     render() {
         this.getImageUrl(this.props.item.photo);
