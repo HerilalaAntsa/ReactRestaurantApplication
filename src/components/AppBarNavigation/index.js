@@ -2,44 +2,43 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
 import { Button, Toolbar, AppBar, Grid, Typography } from '@material-ui/core';
-import { app } from '../../constants/base';
-
+import HomeIcon from '@material-ui/icons/Home';
+import FaceIcon from '@material-ui/icons/Face';
 
 function AppBarNavigation(props) {
   return (
-    <div>
       <AppBar position="static">
         <Toolbar>
-          {props.authentified ?
-            <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="center"
-            >
-              <Typography variant="h5" style={{ color: '#fff', right: 0 }} >Bienvenue {props.user.displayName} !</Typography>
-            </Grid>
-            : null
-          }
           <Grid
             container
             direction="row"
-            justify="center"
+            justify="space-between"
             alignItems="center"
           >
             {props.authentified ?
-              <Button color="inherit" component={Link} to={ROUTES.LOGOUT}>Déconnexion</Button>
-              : <Button onClick={() => { props.openLogin() }} color="inherit">Connexion</Button>
+            <Typography align="right" variant="button" style={{ color: '#fff', right: 0 }} >
+              <FaceIcon style={{marginRight : 8}}/>
+              Bienvenue {props.user.displayName} !
+            </Typography>
+            : null
             }
-
-
-            <Button color="inherit" component={Link} to={ROUTES.ACCUEIL}>
-              Accueil
-            </Button>
+            <Grid item>
+              {props.authentified ?
+                  <Button color="inherit" component={Link} to={ROUTES.LOGOUT}>
+                    Déconnexion
+                  </Button>
+                : <Button onClick={() => { props.openLogin() }} color="inherit">
+                    Connexion
+                  </Button>
+              }
+              <Button color="inherit" component={Link} to={ROUTES.ACCUEIL}>
+                <HomeIcon style={{marginRight:8}}/>
+                Accueil
+              </Button>
+            </Grid>
           </Grid>
         </Toolbar>
       </AppBar>
-    </div>
   );
 }
 export default AppBarNavigation
