@@ -78,7 +78,7 @@ function ModalDetail(props) {
                     gutterBottom>
                     Hors d 'oeuvre
                 </Typography>
-                  <Plat list={props.menu.horsdoeuvre} />
+                  <Plat handleUploadFile={props.handleUploadFile} type="horsdoeuvre" list={props.menu.horsdoeuvre} />
                 </Paper>
               </Grid>
               <Grid item xs={4}>
@@ -90,7 +90,7 @@ function ModalDetail(props) {
                     gutterBottom>
                     Plat
                 </Typography>
-                  <Plat list={props.menu.plat} />
+                  <Plat handleUploadFile={props.handleUploadFile} type="plat" list={props.menu.plat} />
                 </Paper>
               </Grid>
               <Grid item xs={4}>
@@ -102,7 +102,7 @@ function ModalDetail(props) {
                     gutterBottom>
                     Dessert
                 </Typography>
-                  <Plat list={props.menu.dessert} />
+                  <Plat handleUploadFile={props.handleUploadFile} type="dessert" list={props.menu.dessert} />
                 </Paper>
               </Grid>
             </Grid>

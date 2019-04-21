@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardHeader, CardContent, Typography, CardMedia, ListItem, List } from '@material-ui/core';
+import { Card, CardHeader, CardContent, Typography, CardMedia, ListItem, List, CardActionArea } from '@material-ui/core';
 import { app } from '../../constants/base';
 
 var storageRef = app.storage().ref();
@@ -9,7 +9,6 @@ class DetailPlat extends Component {
         this.state = {
             img : '',
         }
-        this.getImageUrl(this.props.plat.photo);
     }
     getImageUrl(value){
         storageRef.child(value).getDownloadURL().then((url)=>{
@@ -19,16 +18,31 @@ class DetailPlat extends Component {
         });
     }
     render(){
+        this.getImageUrl(this.props.plat.photo);
         let item = this.props.plat;
         return (
             <ListItem key={item._id}>
                 <Card elevation={0}>
-                    <CardMedia
-                        style={{height: 140,}}
-                        // image={item.photo}
-                        image={this.state.img}
-                        title={item.nom}
+                    
+                    <input
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        type="file"
+                        name={item._id}
+                        id={'menu-' + item._id}
+                        onChange={(e) => this.props.handleUploadFile(e, this.props.type, item._id)}
                     />
+                    <label htmlFor={'menu-' + item._id}>
+                        <CardActionArea variant="text"
+                            focusRipple component="span">
+                            <CardMedia
+                                style={{height: 140,}}
+                                // image={item.photo}
+                                image={this.state.img}
+                                title={item.nom}
+                            />
+                        </CardActionArea>
+                    </label>
                     <CardHeader
                         title={item.nom}
                         subheader={item.prix}
@@ -47,6 +61,8 @@ function Plat(props) {
     let list = Object.keys(props.list).map((key) => {
         let item = props.list[key];
         return <DetailPlat
+            handleUploadFile={props.handleUploadFile}
+            type={props.type}
             key={key}
             plat={item} />
     });

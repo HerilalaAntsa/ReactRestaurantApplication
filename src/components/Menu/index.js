@@ -9,6 +9,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import AddIcon from '@material-ui/icons/Add';
 import {Link} from 'react-router-dom';
 import ModalNew from './ModalNew';
+import { withSnackbar } from 'notistack';
 
 const styles = theme => ({
   titre: {
@@ -33,8 +34,39 @@ class MenuList extends Component {
       openNew: false,
       detail: {},
       loading: false,
-      user: null
+      user: null,
+      photo: '',
     }
+  }
+  handleUploadFile(event, type, id){
+    var fileList = event.target.files;
+    var name = 'menu/' + this.state.id + type + id + fileList[0].name;
+    this.setState({
+      photo: name,
+    })
+    var reader = new FileReader();
+    reader.onload = (loadedEvent) => {        
+        var storageRef = app.storage().ref();
+        var imgref = storageRef.child(this.state.photo);
+        imgref.putString(loadedEvent.target.result, 'data_url').then((snapshot) => {
+        let  copieMenu = {...this.state.menu};
+        copieMenu[this.state.detail._id][type][id]['photo'] = imgref.fullPath || "default-thumbnail.jpg";
+        this.setState({
+          menu: copieMenu
+        });
+        this.toggleLoading(false);
+        this.props.enqueueSnackbar("L'image a été correctement ajouté(e)",
+          {
+            variant: 'default',
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'center',
+            },
+          });
+      });
+    }
+    this.toggleLoading(true);
+    reader.readAsDataURL(fileList[0]);
   }
   handleClickOpenDetail(menu) {
     this.setState({ openDetail: true, detail: menu });
@@ -129,7 +161,8 @@ class MenuList extends Component {
           menu={this.state.detail}
           handleClose={this.handleCloseDetail.bind(this)}
           open={this.state.openDetail}
-          Transition={Transition} />
+          Transition={Transition}
+          handleUploadFile={this.handleUploadFile.bind(this)} />
         <ModalCommande
           menu={this.state.detail}
           resto={this.state.id}
@@ -155,4 +188,4 @@ class MenuList extends Component {
 function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
-export default withStyles(styles)(MenuList);
+export default withStyles(styles)(withSnackbar(MenuList));
