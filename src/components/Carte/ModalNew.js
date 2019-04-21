@@ -39,14 +39,18 @@ class ModalNew extends Component {
   };
   handleUploadFile(event){
     var fileList = event.target.files;
+    var name = 'carte/' + this.props.resto + fileList[0].name;
+    console.log(name)
+    this.setState({
+      photo: name,
+    })
     var reader = new FileReader();
-    reader.onload = function(loadedEvent) {
+    reader.onload = (loadedEvent) => {
         this.setState({
           file: loadedEvent.target.result,
-          photo: 'carte/' + this.props.resto + fileList[0].name
         })
     }
-    reader.readAsBinaryString(fileList[0]);
+    reader.readAsDataURL(fileList[0]);
   }
   componentWillMount() {
     app.auth().onAuthStateChanged(user => {
@@ -85,14 +89,14 @@ class ModalNew extends Component {
     const copieCarte = { ...this.state.carte }; // spread operator permert de cloner des object
     copieCarte[this.props.resto] = copieCarte[this.props.resto] || {};
     var storageRef = app.storage().ref();
-    var imgref = storageRef.child(this.state.photo)
-    imgref.putString(this.state.file, 'data_url').then(function(snapshot) {
+    var imgref = storageRef.child(this.state.photo);
+    imgref.putString(this.state.file, 'data_url').then((snapshot) => {
       console.log('Uploaded a data_url string!');
       let newCarte = {
         '_id': uuid,
         'description': this.state.description,
         'nom': this.state.nom,
-        'photo': imgref.fullPath || "https://firebasestorage.googleapis.com/v0/b/exo-restaurant.appspot.com/o/default-thumbnail.jpg?alt=media&token=9c55ab62-39a5-4c7d-93d3-a96f26b8cf7e",
+        'photo': imgref.fullPath || "default-thumbnail.jpg",
         'prix': this.state.prix,
         'type': this.state.type,
       }
@@ -160,8 +164,7 @@ class ModalNew extends Component {
               <InputLabel htmlFor="photo">Photo</InputLabel>
               <Input name="photo"
                 type="file"
-                accept="image/*"                
-                value={this.state.photo}
+                accept="image/*"
                 onChange={this.handleUploadFile.bind(this)}
                 inputProps={{
                   'aria-label': 'Importer une image du plat',

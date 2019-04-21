@@ -178,7 +178,6 @@ class Commande extends Component {
         addTotal={this.addTotal.bind(this)}
       />
     });
-    console.log(this.total);
     return (
       <div className="App">
         <div className={classes.drawerHeader}>
