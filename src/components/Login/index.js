@@ -102,11 +102,10 @@ class Login extends Component {
     // creation utilisateur
     this.props.handleClose();
     this.toggleLoading(true);
-    console.log(firebase)
     app.auth().createUserWithEmailAndPassword(email, password)
       .then((cred) => {
         this.props.enqueueSnackbar(
-          "Votre compte a été correctement créé avec l'adresse :" + cred.user.email,
+          "Votre compte a été correctement créé avec l'adresse : " + cred.user.email,
           {
             variant: 'default',
             anchorOrigin: {
@@ -115,12 +114,12 @@ class Login extends Component {
             },
           });
         this.toggleLoading(false);
-        return app.database()
-        .ref(cred.user.uid)
-        .set({
-          username,
-          email,
-          roles,
+        return cred.user.updateProfile({
+          displayName: username,
+          roles: roles
+          //username,
+          //email,
+          //roles,
         })
       })
       .catch((error) => {

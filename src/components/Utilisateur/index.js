@@ -66,10 +66,12 @@ class App extends Component {
         openCommande: true,
         openLogin: false,
         authentificated: false,
+        user: null,
       };
       app.auth().onAuthStateChanged(user => {
         this.setState({
-          authentificated: user && !user.isAnonymous
+          authentificated: user && !user.isAnonymous,
+          user: user,
         })
       });
     }
@@ -98,7 +100,10 @@ class App extends Component {
               })}>
               <Router>
                 <div>
-                  <AppBarNavigation authentified={this.state.authentificated} openLogin={this.handleClickOpenLogin.bind(this)} />
+                  <AppBarNavigation 
+                    authentified={this.state.authentificated} 
+                    openLogin={this.handleClickOpenLogin.bind(this)} 
+                    user={this.state.user}/>
   
                   <hr />
   
