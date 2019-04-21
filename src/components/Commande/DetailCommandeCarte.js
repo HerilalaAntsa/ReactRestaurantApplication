@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Badge, IconButton, Chip, Tooltip, Grid, ListItem, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
+import { Typography, IconButton, Chip, Tooltip, Grid, ListItem, ListItemText } from '@material-ui/core';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import { withStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 
 const styles = theme => ({
     card: {
@@ -35,7 +33,6 @@ const styles = theme => ({
 });
 
 function DetailCommandeCarte(props) {
-    const { classes } = props;
     return (
     <ListItem divider>
         <Grid container>

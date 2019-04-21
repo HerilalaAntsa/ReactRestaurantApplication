@@ -1,11 +1,10 @@
 import React from 'react';
-import { Typography, Badge, IconButton, Tooltip, ListItem, Grid, ListItemSecondaryAction, ListItemText, List } from '@material-ui/core';
+import { Typography, IconButton, Tooltip, ListItem, Grid, ListItemText, List } from '@material-ui/core';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 
 function DetailCommandeMenu(props) {
-    const { classes } = props;
     return (
         <ListItem divider>
             <Grid container direction="column">
