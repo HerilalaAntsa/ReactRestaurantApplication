@@ -22,6 +22,7 @@ class CarteListItem extends Component{
         super(props);
         this.state = {
             img : '',
+            loading: false,
         }
         this.getImageUrl(this.props.item.photo);
     }
@@ -38,7 +39,20 @@ class CarteListItem extends Component{
             <ListItem key={this.props.item._id} alignItems="flex-start" divider>
                 <Grid container spacing={8} wrap="nowrap" alignItems="center">
                     <Grid item>
-                        <img width={150} alt={this.props.item.nom} src={this.state.img} />
+                        <input
+                            accept="image/*"
+                            style={{display:'none'}}
+                            type="file"
+                            name={this.props.item._id}
+                            id={'up-' + this.props.item._id}
+                            onChange={this.props.handleUploadFile}
+                        />
+                        <label htmlFor={'up-' + this.props.item._id}>
+                            <Button variant="text"
+                            focusRipple component="span">
+                            <img width={150} alt={this.props.item.nom} src={this.state.img} />
+                            </Button>
+                        </label>
                     </Grid>
                     <Grid item container direction="column">
                         <Grid item>

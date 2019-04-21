@@ -40,7 +40,6 @@ class ModalNew extends Component {
   handleUploadFile(event){
     var fileList = event.target.files;
     var name = 'carte/' + this.props.resto + fileList[0].name;
-    console.log(name)
     this.setState({
       photo: name,
     })
@@ -120,7 +119,6 @@ class ModalNew extends Component {
   }
 
   render() {
-    console.log(app.auth().currentUser)
     const {classes} = this.props;
     return (
       <Dialog
