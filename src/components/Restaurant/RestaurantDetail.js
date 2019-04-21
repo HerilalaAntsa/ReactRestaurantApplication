@@ -23,7 +23,7 @@ class RestaurantDetail extends Component {
         }).catch(()=>{});
     }
     render() {
-        this.getImageUrl(this.props.item.photo);
+        this.getImageUrl(this.props.item.photo || '');
         return (
             <Grid container spacing={8} wrap="nowrap" alignItems="center">
                 <Grid item>

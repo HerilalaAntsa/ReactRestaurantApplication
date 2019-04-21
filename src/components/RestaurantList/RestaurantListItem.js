@@ -32,7 +32,7 @@ class RestaurantListItem extends Component {
     }
     
     render(){
-        this.getImageUrl(this.props.item.photo);
+        this.getImageUrl(this.props.item.photo || '');
         const { classes } = this.props;
         return (
             <Grid item>

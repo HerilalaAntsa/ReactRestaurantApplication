@@ -18,7 +18,7 @@ class DetailPlat extends Component {
         }).catch(()=>{});
     }
     render(){
-        this.getImageUrl(this.props.plat.photo);
+        this.getImageUrl(this.props.plat.photo || '');
         let item = this.props.plat;
         return (
             <ListItem key={item._id}>

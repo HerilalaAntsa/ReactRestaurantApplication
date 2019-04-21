@@ -33,7 +33,7 @@ class CarteListItem extends Component{
         }).catch(()=>{});
     }
     render(){
-        this.getImageUrl(this.props.item.photo);
+        this.getImageUrl(this.props.item.photo || '');
         const { classes } = this.props;
         return (
             <ListItem key={this.props.item._id} alignItems="flex-start" divider>
