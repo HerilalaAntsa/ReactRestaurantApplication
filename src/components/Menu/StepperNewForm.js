@@ -4,6 +4,7 @@ import { FormLabel, Grid, withStyles, Paper, Chip, TextField, Typography, MenuIt
 import classNames from 'classnames';
 import CancelIcon from '@material-ui/icons/Cancel';
 import Select from 'react-select';
+import { app } from '../../constants/base';
 
 const styles = theme => ({
     root: {
@@ -52,27 +53,44 @@ const styles = theme => ({
         height: theme.spacing.unit * 2,
     },
 });
+const storageRef = app.storage().ref();
 function inputComponent({ inputRef, ...props }) {
     return <div ref={inputRef} {...props} />;
 }
-function Option(props) {
-    return (
-        <MenuItem
-        key={props.data._id}
-        buttonRef={props.innerRef}
-        selected={props.isFocused}
-        component="div"
-        style={{
-            fontWeight: props.isSelected ? 500 : 400,
-        }}
-        {...props.innerProps}
-        >
-            <ListItemAvatar>
-                <Avatar alt={props.data.nom} src={props.data.photo} />
-            </ListItemAvatar>
-            <ListItemText inset primary={props.data.nom} />
-        </MenuItem>
-    );
+class Option extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            img: '',
+        }
+    }
+    getImageUrl(value){
+        storageRef.child(value).getDownloadURL().then((url)=>{
+            this.setState({
+                img : url,
+            })
+        }).catch(()=>{});
+    }
+    render(){
+        this.getImageUrl(this.props.data.photo);
+        return (
+            <MenuItem
+            key={this.props.data._id}
+            buttonRef={this.props.innerRef}
+            selected={this.props.isFocused}
+            component="div"
+            style={{
+                fontWeight: this.props.isSelected ? 500 : 400,
+            }}
+            {...this.props.innerProps}
+            >
+                <ListItemAvatar>
+                    <Avatar alt={this.props.data.nom} src={this.state.img} />
+                </ListItemAvatar>
+                <ListItemText inset primary={this.props.data.nom} />
+            </MenuItem>
+        );
+    }
 }
 function Control(props) {
     return (
@@ -98,20 +116,37 @@ function Menu(props) {
         </Paper>
     );
 }
-function MultiValue(props) {
-    return (
-        <Chip
-            avatar={<Avatar alt={props.data.nom} src={props.data.photo} />}
-            key={props.data._id}
-            tabIndex={-1}
-            label={props.data.nom}
-            className={classNames(props.selectProps.classes.chip, {
-                [props.selectProps.classes.chipFocused]: props.isFocused,
-            })}
-            onDelete={props.removeProps.onClick}
-            deleteIcon={<CancelIcon {...props.removeProps} />}
-        />
-    );
+
+class MultiValue extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            img: '',
+        }
+    }
+    getImageUrl(value){
+        storageRef.child(value).getDownloadURL().then((url)=>{
+            this.setState({
+                img : url,
+            })
+        }).catch(()=>{});
+    }
+    render(){
+        this.getImageUrl(this.props.data.photo);
+        return (
+            <Chip
+                avatar={<Avatar alt={this.props.data.nom} src={this.state.img} />}
+                key={this.props.data._id}
+                tabIndex={-1}
+                label={this.props.data.nom}
+                className={classNames(this.props.selectProps.classes.chip, {
+                    [this.props.selectProps.classes.chipFocused]: this.props.isFocused,
+                })}
+                onDelete={this.props.removeProps.onClick}
+                deleteIcon={<CancelIcon {...this.props.removeProps} />}
+            />
+        );
+    }
 }
 function NoOptionsMessage(props) {
     return (

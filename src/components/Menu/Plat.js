@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Card, CardHeader, CardContent, Typography, CardMedia, ListItem, List, CardActionArea } from '@material-ui/core';
 import { app } from '../../constants/base';
 
-var storageRef = app.storage().ref();
+const storageRef = app.storage().ref();
 class DetailPlat extends Component {
     constructor(props){
         super(props);
