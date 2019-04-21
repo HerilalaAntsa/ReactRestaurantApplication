@@ -9,7 +9,7 @@ developpé avec React JS, Material UI et Firebase
 
 L'application est accessible sur Heroku via le lien: http://findingresto-mbds.herokuapp.com/
 
-Sinon, lancez l'application localement:
+Sinon, pour lancez l'application localement:
 
 ### `npm install`
 
@@ -37,7 +37,7 @@ Ouvrez [http://localhost:3000](http://localhost:3000) pour la voir sur le naviga
 NB: les nouveaux utilisateurs seront inscrits en "mode utilisateur" par défaut. Des comptes admin seront déjà créés dans la base de donnée que vous utiliseriez pour voir le "mode admin". <br>
 ##### Compte admin: email "admin@gmail.com" mdp: "administrateur"
 #### Mode Admin (authentifié)
-Toutes les fonctionnalités sont disponibles + boutons qui permetteront d'ajouter des restaurants, des plats et des menus, ainsi que l'ajout des images qui y conviennent.
+Toutes les fonctionnalités sont disponibles + boutons qui permetteront d'ajouter des restaurants, des plats et des menus, ainsi que l'ajout des images qui y conviennent en cliquant sur l'image définie.
 #### Mode Utilisateur (authentifié)
 Toutes les fonctionnalités  dites précédemment sont disponibles
 #### Mode Visiteur (anonymous: non authentifié)
@@ -48,3 +48,4 @@ https://material-ui.com <br>
 https://firebase.google.com/docs/auth/web/start <br>
 https://www.robinwieruch.de/complete-firebase-authentication-react-tutorial/ <br>
 https://github.com/JedWatson/react-select <br>
+https://firebase.google.com/docs/storage/web/start <br>
