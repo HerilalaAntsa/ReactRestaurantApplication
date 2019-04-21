@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Chip, Avatar, List, ListItem, ListItemText, Grid } from '@material-ui/core';
+import { Typography, List, ListItem, ListItemText } from '@material-ui/core';
 import DetailCommandeCarte from './DetailCommandeCarte';
 import DetailCommandeMenu from './DetailCommandeMenu';
 
